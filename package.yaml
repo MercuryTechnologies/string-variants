@@ -1,0 +1,76 @@
+name: string-variants
+version: 0.1.0.0
+synopsis: Constrained text newtypes
+
+license: MIT
+
+tested-with: GHC ==9.2.4 || ==9.4.2
+# FIXME(jadel): maybe instances should be in a separate package but whatever
+dependencies:
+  - aeson >= 2.0.0.0
+  - base >= 4.9 && <5
+  - bytestring
+  - mono-traversable
+  - QuickCheck
+  - string-conversions
+  - template-haskell
+  - refinery
+  - refined
+  - text
+
+library:
+  source-dirs: src
+
+# from https://medium.com/mercury-bank/enable-all-the-warnings-a0517bc081c3
+ghc-options:
+  - -Weverything
+  - -Wno-missing-exported-signatures # missing-exported-signatures turns off the more strict -Wmissing-signatures. See https://ghc.haskell.org/trac/ghc/ticket/14794#ticket
+  - -Wno-missing-export-lists # Requires explicit export lists for every module, a pain for large modules
+  - -Wno-missing-import-lists # Requires explicit imports of _every_ function (e.g. '$'); too strict
+  - -Wno-missed-specialisations # When GHC can't specialize a polymorphic function. No big deal and requires fixing underlying libraries to solve.
+  - -Wno-all-missed-specialisations # See missed-specialisations
+  - -Wno-unsafe # Don't use Safe Haskell warnings
+  - -Wno-missing-local-signatures # Warning for polymorphic local bindings. Don't think this is an issue
+  - -Wno-monomorphism-restriction # Don't warn if the monomorphism restriction is used
+  - -Wno-missing-safe-haskell-mode # Cabal isn’t setting this currently (introduced in GHC 8.10)
+  - -Wno-prepositive-qualified-module # Cabal’s generate Path_*.hs doesn’t do this (fixed in https://github.com/haskell/cabal/pull/7352)
+  - -Wno-unused-packages # Some tooling gives this error
+  - -Wno-missing-kind-signatures # Warns on literally every type
+
+default-extensions:
+  - AllowAmbiguousTypes
+  - ApplicativeDo
+  - BlockArguments
+  - DataKinds
+  - DeriveAnyClass
+  - DeriveFoldable
+  - DeriveFunctor
+  - DeriveGeneric
+  - DeriveLift
+  - DeriveTraversable
+  - DerivingVia
+  - FlexibleContexts
+  - FlexibleInstances
+  - FunctionalDependencies
+  - GADTs
+  - GeneralizedNewtypeDeriving
+  - ImportQualifiedPost
+  - InstanceSigs
+  - LambdaCase
+  - LexicalNegation
+  - MonoLocalBinds
+  - MultiWayIf
+  - NamedFieldPuns
+  - NumericUnderscores
+  - OverloadedStrings
+  - PatternSynonyms
+  - PolyKinds
+  - RankNTypes
+  - RecordWildCards
+  - RecursiveDo
+  - ScopedTypeVariables
+  - StandaloneDeriving
+  - StandaloneKindSignatures
+  - TypeApplications
+  - TypeFamilies
+  - ViewPatterns
