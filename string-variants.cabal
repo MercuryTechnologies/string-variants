@@ -7,11 +7,22 @@ cabal-version: 1.12
 name:           string-variants
 version:        0.1.0.0
 synopsis:       Constrained text newtypes
+description:    See README at <https://github.com/MercuryTechnologies/string-variants#readme>.
+category:       Data
+homepage:       https://github.com/MercuryTechnologies/string-variants#readme
+bug-reports:    https://github.com/MercuryTechnologies/string-variants/issues
+maintainer:     Jade Lovelace <jadel@mercury.com>
 license:        MIT
 license-file:   LICENSE
 build-type:     Simple
 tested-with:
     GHC ==9.2.4 || ==9.4.2
+extra-source-files:
+    CHANGELOG.md
+
+source-repository head
+  type: git
+  location: https://github.com/MercuryTechnologies/string-variants
 
 library
   exposed-modules:
