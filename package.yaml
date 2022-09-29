@@ -1,5 +1,5 @@
 name: string-variants
-version: 0.1.0.0
+version: 0.1.0.1
 synopsis: Constrained text newtypes
 description: See README at <https://github.com/MercuryTechnologies/string-variants#readme>.
 category: Data
@@ -65,7 +65,6 @@ default-extensions:
   - ImportQualifiedPost
   - InstanceSigs
   - LambdaCase
-  - LexicalNegation
   - MonoLocalBinds
   - MultiWayIf
   - NamedFieldPuns
