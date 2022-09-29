@@ -38,6 +38,11 @@ jobs:
             compilerVersion: 9.2.4
             setup-method: ghcup
             allow-failure: false
+          - compiler: ghc-8.10.7
+            compilerKind: ghc
+            compilerVersion: 8.10.7
+            setup-method: ghcup
+            allow-failure: false
       fail-fast: false
     steps:
       - name: apt
@@ -152,8 +157,6 @@ jobs:
             type:     git
             location: https://github.com/nikita-volkov/refined
             tag:      eced2bb0991bde971646e4b3d291870d0aab83a3
-
-          allow-newer: these-skinny:base
           EOF
           $HCPKG list --simple-output --names-only | perl -ne 'for (split /\s+/) { print "constraints: $_ installed\n" unless /^(string-variants)$/; }' >> cabal.project.local
           cat cabal.project
