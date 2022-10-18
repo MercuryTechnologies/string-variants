@@ -81,6 +81,13 @@ mkNonEmptyText t
   where
     stripped = T.filter (/= '\NUL') $ T.strip t
 
+mkNonEmptyTextWithTruncate :: forall n. KnownNat n => Text -> Maybe (NonEmptyText n)
+mkNonEmptyTextWithTruncate t
+  | textIsWhitespace stripped = Nothing
+  | otherwise = Just (NonEmptyText $ T.stripEnd $ T.take (fromIntegral $ natVal (Proxy @n)) stripped)
+  where
+    stripped = T.filter (/= '\NUL') $ T.strip t
+
 -- | Make a NonEmptyText when you can manually verify the length
 unsafeMkNonEmptyText :: forall n. KnownNat n => Text -> NonEmptyText n
 unsafeMkNonEmptyText = NonEmptyText

@@ -12,6 +12,7 @@ module Data.StringVariants.NonEmptyText
 
     -- * Construction
     mkNonEmptyText,
+    mkNonEmptyTextWithTruncate,
     unsafeMkNonEmptyText,
     nonEmptyTextToText,
     compileNonEmptyText,
