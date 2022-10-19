@@ -63,9 +63,6 @@ mkNullableNonEmptyText t
   | textIsTooLong t (fromIntegral $ natVal (Proxy @n)) = Nothing -- we can't store text that is too long
   | otherwise = Just $ NullableNonEmptyText $ mkNonEmptyText t
 
-mkNonEmptyTextWithTruncate :: forall n. KnownNat n => Text -> Maybe (NonEmptyText n)
-mkNonEmptyTextWithTruncate = mkNonEmptyText . T.take (fromInteger (natVal (Proxy @n)))
-
 nullNonEmptyText :: NullableNonEmptyText n
 nullNonEmptyText = NullableNonEmptyText Nothing
 
