@@ -77,7 +77,7 @@ library
   build-depends:
       QuickCheck
     , aeson >=2.0.0.0
-    , base >=4.9 && <5
+    , base >=4.16 && <5
     , bytestring
     , mono-traversable
     , refined
@@ -140,7 +140,7 @@ test-suite test
       HUnit
     , QuickCheck
     , aeson >=2.0.0.0
-    , base >=4.9 && <5
+    , base >=4.16 && <5
     , bytestring
     , hedgehog
     , hspec
