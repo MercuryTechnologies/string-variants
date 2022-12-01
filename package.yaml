@@ -29,6 +29,25 @@ dependencies:
 library:
   source-dirs: src
 
+# Test suite
+tests:
+  test:
+    main: Main.hs
+    source-dirs:
+      - test
+    ghc-options:
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+      - -Wno-incomplete-uni-patterns # Failing at runtime just means failing the test, which is ok
+      - -O0
+    dependencies:
+      - HUnit
+      - hspec
+      - hspec-core
+      - hspec-expectations
+      - string-variants
+
 # from https://medium.com/mercury-bank/enable-all-the-warnings-a0517bc081c3
 ghc-options:
   - -Weverything

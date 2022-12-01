@@ -43,6 +43,7 @@ where
 
 import Control.Monad
 import Data.Data (Proxy (..), typeRep)
+import Data.Maybe (mapMaybe)
 import Data.StringVariants.NonEmptyText.Internal
 import Data.StringVariants.Util
 import Data.Text (Text)
@@ -82,15 +83,16 @@ nonEmptyTextToText (NonEmptyText t) = t
 -- | Identical to the normal text filter function, but maintains the type-level invariant
 -- that the text length is <= n, unlike unwrapping the text, filtering, then
 -- rewrapping the text.
-filterNonEmptyText :: (Char -> Bool) -> NonEmptyText n -> NonEmptyText n
-filterNonEmptyText f (NonEmptyText t) = NonEmptyText (T.filter f t)
+filterNonEmptyText :: KnownNat n => (Char -> Bool) -> NonEmptyText n -> Maybe (NonEmptyText n)
+filterNonEmptyText f (NonEmptyText t) = mkNonEmptyText (T.filter f t)
 
 -- | Narrows the maximum length, dropping any remaining trailing characters.
-takeNonEmptyText :: forall m n. (KnownNat m, KnownNat n, n <= m) => NonEmptyText m -> NonEmptyText n
+takeNonEmptyText :: forall m n. (KnownNat m, KnownNat n, n <= m, 0 <= n) => NonEmptyText m -> NonEmptyText n
 takeNonEmptyText (NonEmptyText t) =
   if m == n
     then NonEmptyText t
-    else NonEmptyText $ T.take n t
+    -- when the input is stripped, taking from it is guaranteed to be not empty
+    else NonEmptyText $ T.stripEnd $ T.take n t
   where
     m = fromIntegral $ natVal (Proxy @m)
     n = fromIntegral $ natVal (Proxy @n)
@@ -100,21 +102,22 @@ takeNonEmptyTextEnd :: forall m n. (KnownNat m, KnownNat n, n <= m) => NonEmptyT
 takeNonEmptyTextEnd (NonEmptyText t) =
   if m == n
     then NonEmptyText t
-    else NonEmptyText $ T.takeEnd n t
+    -- when the input is stripped, taking from it is guaranteed to be not empty
+    else NonEmptyText $ T.stripStart $ T.takeEnd n t
   where
     m = fromIntegral $ natVal (Proxy @m)
     n = fromIntegral $ natVal (Proxy @n)
 
 -- | /O(n)/ Splits a 'NonEmptyText' into components of length @chunkSize@. The
--- last element may be shorter than the other chunks, depending on the length
--- of the input.
+-- chunks may be shorter than the chunkSize depending on the length
+-- of the input and spacing. Each chunk is stripped of whitespace.
 chunksOfNonEmptyText ::
   forall chunkSize totalSize.
   (KnownNat chunkSize, KnownNat totalSize) =>
   NonEmptyText totalSize ->
   [NonEmptyText chunkSize]
 chunksOfNonEmptyText (NonEmptyText t) =
-  map NonEmptyText (T.chunksOf chunkSize t)
+  mapMaybe mkNonEmptyText (T.chunksOf chunkSize t)
   where
     chunkSize = fromIntegral $ natVal (Proxy @chunkSize)
 
