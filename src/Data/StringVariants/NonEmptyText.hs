@@ -34,9 +34,6 @@ module Data.StringVariants.NonEmptyText
     exactLengthRefinedToRange,
     nonEmptyTextFromRefined,
     refinedFromNonEmptyText,
-
-    -- * Convenience util if you need a NonEmptyText of a dynamically determined lengths
-    useNat,
   )
 where
 

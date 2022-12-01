@@ -1,6 +1,6 @@
 {-# LANGUAGE TypeOperators #-}
 
-module Data.StringVariants.Util (useNat, usePositiveNat, textIsWhitespace, textHasNoMeaningfulContent) where
+module Data.StringVariants.Util (usePositiveNat, textIsWhitespace, textHasNoMeaningfulContent) where
 
 import Data.Proxy
 import GHC.TypeLits (KnownNat, OrderingI (..), SomeNat (..), cmpNat, someNatVal, type (<=))
@@ -14,11 +14,6 @@ textIsWhitespace = T.all isSpace
 
 textHasNoMeaningfulContent :: Text -> Bool
 textHasNoMeaningfulContent = T.all (\c -> isSpace c || isControl c)
-
-useNat :: Integer -> (forall n proxy. KnownNat n => proxy n -> x) -> x
-useNat n f = case someNatVal n of
-  Nothing -> error (show n ++ " isn't a valid Nat")
-  Just (SomeNat p) -> f p
 
 -- | If the integer is >= 1, evaluate the function with the proof of that. Otherwise, return the default value
 usePositiveNat :: Integer -> a -> (forall n proxy. (KnownNat n, 1 <= n) => proxy n -> a) -> a
