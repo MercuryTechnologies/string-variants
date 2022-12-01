@@ -28,6 +28,7 @@ module Data.StringVariants.NonEmptyText
     chunksOfNonEmptyText,
     filterNonEmptyText,
     (<>|),
+    concatWithSpace,
 
     -- * Conversions between 'Refined' and 'NonEmptyText'.
     ContainsNonWhitespaceCharacters (..),
