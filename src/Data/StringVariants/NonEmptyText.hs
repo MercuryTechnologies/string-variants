@@ -125,6 +125,15 @@ chunksOfNonEmptyText (NonEmptyText t) =
 (<>|) :: NonEmptyText n -> NonEmptyText m -> NonEmptyText (n + m)
 (NonEmptyText l) <>| (NonEmptyText r) = NonEmptyText (l <> r)
 
+-- | Concat two NonEmptyText values with a space in between them. The new
+-- maximum length is the sum of the two maximum lengths of the inputs + 1.
+--
+-- Useful for 'unwords'like operations, or combining first and last names.
+--
+-- Mnemonic: @<+>@ from Text.PrettyPrint, @|@ from NonEmpty's ':|' operator
+(<+>|) :: NonEmptyText n -> NonEmptyText m -> NonEmptyText (n + m + 1)
+(NonEmptyText l) <+>| (NonEmptyText r) = NonEmptyText (l <> " " <> r)
+
 -- Refinery
 
 data ContainsNonWhitespaceCharacters = ContainsNonWhitespaceCharacters
