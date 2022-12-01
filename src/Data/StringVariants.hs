@@ -54,7 +54,6 @@ module Data.StringVariants
 
     -- * Convenience util if you need a NonEmptyText of a dynamically determined lengths
     useNat,
-    natOfLength,
   )
 where
 

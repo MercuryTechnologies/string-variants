@@ -8,6 +8,7 @@ import Data.Text (Text)
 import Data.Text qualified as T
 import Data.StringVariants.NonEmptyText
 import Data.StringVariants.NullableNonEmptyText
+import Data.StringVariants.Util (usePositiveNat)
 import GHC.TypeLits
 import Hedgehog
 import Hedgehog.Gen qualified as Gen
@@ -61,7 +62,7 @@ spec = describe "NonEmptyText variants" $ do
         hedgehog $ do
           n <- forAll $ Gen.integral $ Range.constant 1 20000
           let n' = fromInteger n
-          useNat n $ \p -> do
+          usePositiveNat n (pure ()) $ \p -> do
             let NullableNonEmptyText mtext =
                   matchLength p $
                     maybeTextToTruncateNullableNonEmptyText
@@ -76,6 +77,6 @@ spec = describe "NonEmptyText variants" $ do
         hedgehog $ do
           n <- forAll $ Gen.integral $ Range.constant 1 20000
           let n' = fromInteger n
-          useNat n $ \p -> do
-            let mtext = natOfLength p $ mkNonEmptyTextWithTruncate (T.pack $ replicate (n' + 1) 'x')
+          usePositiveNat n (pure ()) $ \(_ :: proxy n) -> do
+            let mtext = mkNonEmptyTextWithTruncate @n (T.pack $ replicate (n' + 1) 'x')
             (T.length . nonEmptyTextToText <$> mtext) === Just n'

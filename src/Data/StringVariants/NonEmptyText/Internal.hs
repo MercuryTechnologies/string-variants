@@ -1,5 +1,6 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeOperators #-}
+{-# LANGUAGE UndecidableInstances #-}
 -- We need redundant constraints in @widen@ to enforce invariants
 {-# OPTIONS_GHC -fno-warn-redundant-constraints #-}
 
@@ -34,7 +35,7 @@ newtype NonEmptyText (n :: Nat) = NonEmptyText Text
 
 type instance Element (NonEmptyText _n) = Char
 
-instance KnownNat n => FromJSON (NonEmptyText n) where
+instance (KnownNat n, 1 <= n) => FromJSON (NonEmptyText n) where
   parseJSON = withText "NonEmptyText" $ \t -> do
     performInboundValidations t
     case mkNonEmptyText t of
@@ -65,7 +66,7 @@ instance ConvertibleStrings (NonEmptyText n) String where
 instance ConvertibleStrings (NonEmptyText n) ByteString where
   convertString (NonEmptyText t) = cs t
 
-instance KnownNat n => Arbitrary (NonEmptyText n) where
+instance (KnownNat n, 1 <= n) => Arbitrary (NonEmptyText n) where
   arbitrary =
     NonEmptyText @n <$> do
       size <- chooseInt (1, fromIntegral (natVal (Proxy :: Proxy n)) - 1)
@@ -73,7 +74,7 @@ instance KnownNat n => Arbitrary (NonEmptyText n) where
       str <- replicateM size $ elements ['0' .. 'z']
       pure $ T.pack str
 
-mkNonEmptyText :: forall n. KnownNat n => Text -> Maybe (NonEmptyText n)
+mkNonEmptyText :: forall n. (KnownNat n, 1 <= n) => Text -> Maybe (NonEmptyText n)
 mkNonEmptyText t
   | T.compareLength stripped (fromIntegral $ natVal (Proxy @n)) == GT = Nothing
   | textIsWhitespace stripped = Nothing
@@ -81,7 +82,7 @@ mkNonEmptyText t
   where
     stripped = T.filter (/= '\NUL') $ T.strip t
 
-mkNonEmptyTextWithTruncate :: forall n. KnownNat n => Text -> Maybe (NonEmptyText n)
+mkNonEmptyTextWithTruncate :: forall n. (KnownNat n, 1 <= n) => Text -> Maybe (NonEmptyText n)
 mkNonEmptyTextWithTruncate t
   | textIsWhitespace stripped = Nothing
   | otherwise = Just (NonEmptyText $ T.stripEnd $ T.take (fromIntegral $ natVal (Proxy @n)) stripped)
@@ -89,7 +90,7 @@ mkNonEmptyTextWithTruncate t
     stripped = T.filter (/= '\NUL') $ T.stripStart t
 
 -- | Make a NonEmptyText when you can manually verify the length
-unsafeMkNonEmptyText :: forall n. KnownNat n => Text -> NonEmptyText n
+unsafeMkNonEmptyText :: forall n. (KnownNat n, 1 <= n) => Text -> NonEmptyText n
 unsafeMkNonEmptyText = NonEmptyText
 
 -- | Converts a 'NonEmptyText' to a wider NonEmptyText

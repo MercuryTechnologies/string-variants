@@ -37,7 +37,6 @@ module Data.StringVariants.NonEmptyText
 
     -- * Convenience util if you need a NonEmptyText of a dynamically determined lengths
     useNat,
-    natOfLength,
   )
 where
 
@@ -67,10 +66,13 @@ compileNonEmptyText n =
     }
   where
     compileNonEmptyText' :: String -> Q Exp
-    compileNonEmptyText' s = useNat n $ \p ->
-      case natOfLength p $ mkNonEmptyText (T.pack s) of
-        Nothing -> fail $ "Invalid NonEmptyText. Needs to be < " ++ show (n + 1) ++ " characters, and not entirely whitespace: " ++ s
+    compileNonEmptyText' s = usePositiveNat n errorMessage $ \(_ :: proxy n) ->
+      case mkNonEmptyText @n (T.pack s) of
         Just txt -> [|$(lift txt) :: NonEmptyText $(pure $ LitT $ NumTyLit n)|]
+        Nothing -> errorMessage
+      where
+        errorMessage = fail $ "Invalid NonEmptyText. Needs to be < " ++ show (n + 1) ++ " characters, and not entirely whitespace: " ++ s
+
 
 convertEmptyTextToNothing :: Text -> Maybe Text
 convertEmptyTextToNothing t
@@ -83,7 +85,7 @@ nonEmptyTextToText (NonEmptyText t) = t
 -- | Identical to the normal text filter function, but maintains the type-level invariant
 -- that the text length is <= n, unlike unwrapping the text, filtering, then
 -- rewrapping the text.
-filterNonEmptyText :: KnownNat n => (Char -> Bool) -> NonEmptyText n -> Maybe (NonEmptyText n)
+filterNonEmptyText :: (KnownNat n, 1 <= n) => (Char -> Bool) -> NonEmptyText n -> Maybe (NonEmptyText n)
 filterNonEmptyText f (NonEmptyText t) = mkNonEmptyText (T.filter f t)
 
 -- | Narrows the maximum length, dropping any remaining trailing characters.
@@ -113,7 +115,7 @@ takeNonEmptyTextEnd (NonEmptyText t) =
 -- of the input and spacing. Each chunk is stripped of whitespace.
 chunksOfNonEmptyText ::
   forall chunkSize totalSize.
-  (KnownNat chunkSize, KnownNat totalSize, chunkSize <= totalSize) =>
+  (KnownNat chunkSize, KnownNat totalSize, chunkSize <= totalSize, 1 <= chunkSize) =>
   NonEmptyText totalSize ->
   [NonEmptyText chunkSize]
 chunksOfNonEmptyText (NonEmptyText t) =

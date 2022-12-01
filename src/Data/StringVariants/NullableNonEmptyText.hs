@@ -1,4 +1,6 @@
 {-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE TypeOperators #-}
+{-# LANGUAGE UndecidableInstances #-}
 
 module Data.StringVariants.NullableNonEmptyText
   ( -- Safe to construct, so we can export the contents
@@ -32,6 +34,7 @@ import Data.Aeson.Types qualified as J
 import Data.Data (Proxy (..))
 import Data.Maybe (fromMaybe)
 import Data.StringVariants.NonEmptyText
+import Data.StringVariants.Util
 import Data.Text (Text)
 import Data.Text qualified as T
 import GHC.Generics (Generic)
@@ -57,7 +60,7 @@ newtype NullableNonEmptyText n = NullableNonEmptyText (Maybe (NonEmptyText n))
   deriving stock (Generic, Show, Read, Lift)
   deriving newtype (Eq, ToJSON)
 
-mkNullableNonEmptyText :: forall n. KnownNat n => Text -> Maybe (NullableNonEmptyText n)
+mkNullableNonEmptyText :: forall n. (KnownNat n, 1 <= n) => Text -> Maybe (NullableNonEmptyText n)
 mkNullableNonEmptyText t
   | T.compareLength t (fromIntegral $ natVal (Proxy @n)) == GT = Nothing -- we can't store text that is too long
   | otherwise = Just $ NullableNonEmptyText $ mkNonEmptyText t
@@ -68,7 +71,7 @@ nullNonEmptyText = NullableNonEmptyText Nothing
 isNullNonEmptyText :: NullableNonEmptyText n -> Bool
 isNullNonEmptyText = (== nullNonEmptyText)
 
-instance KnownNat n => FromJSON (NullableNonEmptyText n) where
+instance (KnownNat n, 1 <= n) => FromJSON (NullableNonEmptyText n) where
   parseJSON = \case
     J.String t -> case mkNullableNonEmptyText t of
       Just txt -> pure txt
@@ -76,7 +79,7 @@ instance KnownNat n => FromJSON (NullableNonEmptyText n) where
     J.Null -> pure $ NullableNonEmptyText Nothing
     x -> fail $ "Data/StringVariants/NullableNonEmptyText.hs: When trying to parse a NullableNonEmptyText, expected a String or Null, but received: " ++ show x
 
-parseNullableNonEmptyText :: KnownNat n => Text -> J.Object -> J.Parser (NullableNonEmptyText n)
+parseNullableNonEmptyText :: (KnownNat n, 1 <= n) => Text -> J.Object -> J.Parser (NullableNonEmptyText n)
 parseNullableNonEmptyText fieldName obj = obj .:? J.fromText fieldName .!= nullNonEmptyText
 
 fromMaybeNullableText :: Maybe (NullableNonEmptyText n) -> NullableNonEmptyText n
@@ -89,7 +92,7 @@ maybeNonEmptyTextToNullable :: Maybe (NonEmptyText n) -> NullableNonEmptyText n
 maybeNonEmptyTextToNullable Nothing = nullNonEmptyText
 maybeNonEmptyTextToNullable jt = NullableNonEmptyText jt
 
-maybeTextToTruncateNullableNonEmptyText :: forall n. KnownNat n => Maybe Text -> NullableNonEmptyText n
+maybeTextToTruncateNullableNonEmptyText :: forall n. (KnownNat n, 1 <= n) => Maybe Text -> NullableNonEmptyText n
 maybeTextToTruncateNullableNonEmptyText mText = NullableNonEmptyText $ mText >>= mkNonEmptyText . T.take (fromInteger (natVal (Proxy @n)))
 
 nullableNonEmptyTextToMaybeNonEmptyText :: NullableNonEmptyText n -> Maybe (NonEmptyText n)
@@ -108,7 +111,9 @@ compileNullableNonEmptyText n =
     }
   where
     compileNullableNonEmptyText' :: String -> Q Exp
-    compileNullableNonEmptyText' s = useNat n $ \p ->
-      case natOfLength p $ mkNullableNonEmptyText (T.pack s) of
-        Nothing -> fail $ "Invalid NullableNonEmptyText. Needs to be < " ++ show (n + 1) ++ " characters, and not entirely whitespace: " ++ s
+    compileNullableNonEmptyText' s = usePositiveNat n errorMessage $ \(_ :: proxy n) ->
+      case mkNullableNonEmptyText @n (T.pack s) of
         Just txt -> [|$(lift txt)|]
+        Nothing -> errorMessage
+      where
+        errorMessage = fail $ "Invalid NullableNonEmptyText. Needs to be < " ++ show (n + 1) ++ " characters, and not entirely whitespace: " ++ s
