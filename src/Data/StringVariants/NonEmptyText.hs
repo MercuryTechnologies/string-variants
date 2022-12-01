@@ -82,6 +82,8 @@ nonEmptyTextToText (NonEmptyText t) = t
 -- | Identical to the normal text filter function, but maintains the type-level invariant
 -- that the text length is <= n, unlike unwrapping the text, filtering, then
 -- rewrapping the text.
+--
+-- Will return Nothing if the resulting length is zero.
 filterNonEmptyText :: (KnownNat n, 1 <= n) => (Char -> Bool) -> NonEmptyText n -> Maybe (NonEmptyText n)
 filterNonEmptyText f (NonEmptyText t) = mkNonEmptyText (T.filter f t)
 
