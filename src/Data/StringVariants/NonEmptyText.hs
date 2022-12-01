@@ -28,6 +28,7 @@ module Data.StringVariants.NonEmptyText
     chunksOfNonEmptyText,
     filterNonEmptyText,
     (<>|),
+    concatWithSpace,
 
     -- * Conversions between 'Refined' and 'NonEmptyText'.
     ContainsNonWhitespaceCharacters (..),
@@ -124,6 +125,14 @@ chunksOfNonEmptyText (NonEmptyText t) =
 -- Mnemonic: @<>@ for monoid, @|@ from NonEmpty's ':|' operator
 (<>|) :: NonEmptyText n -> NonEmptyText m -> NonEmptyText (n + m)
 (NonEmptyText l) <>| (NonEmptyText r) = NonEmptyText (l <> r)
+
+-- | Concat two 'NonEmptyText' values with a space in between them. The new
+-- maximum length is the sum of the two maximum lengths of the inputs + 1 for
+-- the space.
+--
+-- Useful for 'unwords'like operations, or combining first and last names.
+concatWithSpace :: NonEmptyText n -> NonEmptyText m -> NonEmptyText (n + m + 1)
+concatWithSpace (NonEmptyText l)  (NonEmptyText r) = NonEmptyText (l <> " " <> r)
 
 -- Refinery
 
