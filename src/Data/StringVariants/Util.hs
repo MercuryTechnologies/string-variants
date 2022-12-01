@@ -1,18 +1,9 @@
-module Data.StringVariants.Util (natOfLength, useNat, textIsTooLong, textIsWhitespace, textHasNoMeaningfulContent) where
+module Data.StringVariants.Util (natOfLength, useNat, textIsWhitespace, textHasNoMeaningfulContent) where
 import GHC.TypeLits (KnownNat, Nat, SomeNat (..), someNatVal)
 import Prelude
 import Data.Text (Text)
 import qualified Data.Text as T
 import Data.Char (isSpace, isControl)
-
-textIsTooLong :: Text -> Int -> Bool
--- why take? because of stream fusion,
--- length isn't O(1), it's O(n). which means
--- it's better to cut off the text at @n@
--- and then evaluate the resulting stream, than
--- to evaluate the entire stream. very unintuitive,
--- but that's just the way things are :(
-textIsTooLong t n = T.length (T.take (n + 1) t) >= (n + 1)
 
 textIsWhitespace :: Text -> Bool
 textIsWhitespace = T.all isSpace

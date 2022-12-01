@@ -17,7 +17,7 @@ import Data.MonoTraversable
 import Data.Proxy
 import Data.Sequences
 import Data.String.Conversions (ConvertibleStrings (..), cs)
-import Data.StringVariants.Util (textHasNoMeaningfulContent, textIsTooLong, textIsWhitespace)
+import Data.StringVariants.Util (textHasNoMeaningfulContent, textIsWhitespace)
 import Data.Text (Text)
 import Data.Text qualified as T
 import GHC.Generics (Generic)
@@ -75,7 +75,7 @@ instance KnownNat n => Arbitrary (NonEmptyText n) where
 
 mkNonEmptyText :: forall n. KnownNat n => Text -> Maybe (NonEmptyText n)
 mkNonEmptyText t
-  | textIsTooLong stripped (fromIntegral $ natVal (Proxy @n)) = Nothing
+  | T.compareLength stripped (fromIntegral $ natVal (Proxy @n)) == GT = Nothing
   | textIsWhitespace stripped = Nothing
   | otherwise = Just (NonEmptyText stripped)
   where

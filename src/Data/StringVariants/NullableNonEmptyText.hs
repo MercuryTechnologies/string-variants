@@ -32,7 +32,6 @@ import Data.Aeson.Types qualified as J
 import Data.Data (Proxy (..))
 import Data.Maybe (fromMaybe)
 import Data.StringVariants.NonEmptyText
-import Data.StringVariants.Util (textIsTooLong)
 import Data.Text (Text)
 import Data.Text qualified as T
 import GHC.Generics (Generic)
@@ -60,7 +59,7 @@ newtype NullableNonEmptyText n = NullableNonEmptyText (Maybe (NonEmptyText n))
 
 mkNullableNonEmptyText :: forall n. KnownNat n => Text -> Maybe (NullableNonEmptyText n)
 mkNullableNonEmptyText t
-  | textIsTooLong t (fromIntegral $ natVal (Proxy @n)) = Nothing -- we can't store text that is too long
+  | T.compareLength t (fromIntegral $ natVal (Proxy @n)) == GT = Nothing -- we can't store text that is too long
   | otherwise = Just $ NullableNonEmptyText $ mkNonEmptyText t
 
 nullNonEmptyText :: NullableNonEmptyText n
