@@ -1,12 +1,11 @@
 name: string-variants
-version: 0.2.0
+version: 0.2.0.0
 synopsis: Constrained text newtypes
 description: See README at <https://github.com/MercuryTechnologies/string-variants#readme>.
 category: Data
 github: MercuryTechnologies/string-variants
 
-# FIXME(jadel): find other maintainers also
-maintainer: Jade Lovelace <jadel@mercury.com>
+maintainer: Jade Lovelace <jadel@mercury.com>, Borys Lykakh <borys@fastmail.com>
 extra-source-files:
   - CHANGELOG.md
 
