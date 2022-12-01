@@ -5,7 +5,7 @@ cabal-version: 1.12
 -- see: https://github.com/sol/hpack
 
 name:           string-variants
-version:        0.1.0.2
+version:        0.1.1
 synopsis:       Constrained text newtypes
 description:    See README at <https://github.com/MercuryTechnologies/string-variants#readme>.
 category:       Data
