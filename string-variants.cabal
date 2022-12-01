@@ -92,6 +92,7 @@ test-suite test
   main-is: Main.hs
   other-modules:
       Spec
+      Specs.NonEmptySpec
       Specs.TextManipulationSpec
       Paths_string_variants
   hs-source-dirs:
@@ -139,9 +140,11 @@ test-suite test
     , aeson >=2.0.0.0
     , base >=4.9 && <5
     , bytestring
+    , hedgehog
     , hspec
     , hspec-core
     , hspec-expectations
+    , hspec-hedgehog
     , mono-traversable
     , refined
     , refinery
