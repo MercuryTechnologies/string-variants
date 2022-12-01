@@ -87,7 +87,7 @@ filterNonEmptyText :: KnownNat n => (Char -> Bool) -> NonEmptyText n -> Maybe (N
 filterNonEmptyText f (NonEmptyText t) = mkNonEmptyText (T.filter f t)
 
 -- | Narrows the maximum length, dropping any remaining trailing characters.
-takeNonEmptyText :: forall m n. (KnownNat m, KnownNat n, n <= m, 0 <= n) => NonEmptyText m -> NonEmptyText n
+takeNonEmptyText :: forall m n. (KnownNat m, KnownNat n, 1 <= n, n <= m) => NonEmptyText m -> NonEmptyText n
 takeNonEmptyText (NonEmptyText t) =
   if m == n
     then NonEmptyText t
@@ -98,7 +98,7 @@ takeNonEmptyText (NonEmptyText t) =
     n = fromIntegral $ natVal (Proxy @n)
 
 -- | Narrows the maximum length, dropping any prefix remaining characters.
-takeNonEmptyTextEnd :: forall m n. (KnownNat m, KnownNat n, n <= m) => NonEmptyText m -> NonEmptyText n
+takeNonEmptyTextEnd :: forall m n. (KnownNat m, KnownNat n, 1 <= n, n <= m) => NonEmptyText m -> NonEmptyText n
 takeNonEmptyTextEnd (NonEmptyText t) =
   if m == n
     then NonEmptyText t
@@ -113,7 +113,7 @@ takeNonEmptyTextEnd (NonEmptyText t) =
 -- of the input and spacing. Each chunk is stripped of whitespace.
 chunksOfNonEmptyText ::
   forall chunkSize totalSize.
-  (KnownNat chunkSize, KnownNat totalSize) =>
+  (KnownNat chunkSize, KnownNat totalSize, chunkSize <= totalSize) =>
   NonEmptyText totalSize ->
   [NonEmptyText chunkSize]
 chunksOfNonEmptyText (NonEmptyText t) =
