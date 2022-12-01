@@ -41,14 +41,15 @@ tests:
       - -Wno-incomplete-uni-patterns # Failing at runtime just means failing the test, which is ok
       - -O0
     dependencies:
-      - hedgehog
       - HUnit
+      - hedgehog
       - hspec
       - hspec-core
-      - hspec-discover
-      - hspec-expectations
       - hspec-hedgehog
+      - hspec-expectations
       - string-variants
+    build-tools:
+      - hspec-discover
 
 # from https://medium.com/mercury-bank/enable-all-the-warnings-a0517bc081c3
 ghc-options:
