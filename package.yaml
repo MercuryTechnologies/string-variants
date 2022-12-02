@@ -1,22 +1,21 @@
 name: string-variants
-version: 0.1.0.1
+version: 0.2.0.0
 synopsis: Constrained text newtypes
 description: See README at <https://github.com/MercuryTechnologies/string-variants#readme>.
 category: Data
 github: MercuryTechnologies/string-variants
 
-# FIXME(jadel): find other maintainers also
-maintainer: Jade Lovelace <jadel@mercury.com>
+maintainer: Jade Lovelace <jadel@mercury.com>, Borys Lykakh <borys@fastmail.com>
 extra-source-files:
   - CHANGELOG.md
 
 license: MIT
 
-tested-with: GHC ==8.10.7 || ==9.2.4 || ==9.4.2
+tested-with: GHC ==9.2.4 || ==9.4.2
 # FIXME(jadel): maybe instances should be in a separate package but whatever
 dependencies:
   - aeson >= 2.0.0.0
-  - base >= 4.9 && <5
+  - base >= 4.16 && <5
   - bytestring
   - mono-traversable
   - QuickCheck
@@ -28,6 +27,29 @@ dependencies:
 
 library:
   source-dirs: src
+
+# Test suite
+tests:
+  test:
+    main: Main.hs
+    source-dirs:
+      - test
+    ghc-options:
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+      - -Wno-incomplete-uni-patterns # Failing at runtime just means failing the test, which is ok
+      - -O0
+    dependencies:
+      - HUnit
+      - hedgehog
+      - hspec
+      - hspec-core
+      - hspec-hedgehog
+      - hspec-expectations
+      - string-variants
+    build-tools:
+      - hspec-discover
 
 # from https://medium.com/mercury-bank/enable-all-the-warnings-a0517bc081c3
 ghc-options:
