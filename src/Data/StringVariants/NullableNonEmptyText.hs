@@ -9,6 +9,7 @@ module Data.StringVariants.NullableNonEmptyText
     -- * Constructing
     mkNonEmptyTextWithTruncate,
     compileNullableNonEmptyText,
+    literalNullableNonEmptyText,
     mkNullableNonEmptyText,
     parseNullableNonEmptyText,
     nullNonEmptyText,
@@ -38,7 +39,7 @@ import Data.StringVariants.Util
 import Data.Text (Text)
 import Data.Text qualified as T
 import GHC.Generics (Generic)
-import GHC.TypeLits (KnownNat, natVal)
+import GHC.TypeLits (KnownNat, KnownSymbol, Nat, Symbol, natVal)
 import Language.Haskell.TH
 import Language.Haskell.TH.Quote
 import Language.Haskell.TH.Syntax (Lift (..))
@@ -117,3 +118,7 @@ compileNullableNonEmptyText n =
         Nothing -> errorMessage
       where
         errorMessage = fail $ "Invalid NullableNonEmptyText. Needs to be < " ++ show (n + 1) ++ " characters, and not entirely whitespace: " ++ s
+
+-- | This requires the text to be non-empty. For the empty text just use the constructor `NullableNonEmptyText Nothing`
+literalNullableNonEmptyText :: forall (s :: Symbol) (n :: Nat). (KnownSymbol s, KnownNat n, SymbolNonEmpty s, SymbolWithNoSpaceAround s, SymbolNoLongerThan s n) => NullableNonEmptyText n
+literalNullableNonEmptyText = NullableNonEmptyText (Just (literalNonEmptyText @s @n))
