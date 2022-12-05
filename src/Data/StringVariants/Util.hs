@@ -47,7 +47,9 @@ type family SymbolLength (length :: Nat) (s :: Maybe (Char, Symbol)) :: Nat wher
   SymbolLength length 'Nothing = length
   SymbolLength length ('Just '(_, s)) = SymbolLength (length + 1) (UnconsSymbol s)
 
-type SymbolNonEmpty s = If (s == "") (TypeError ('Text "Symbol is empty")) (() :: Constraint)
+type family SymbolNonEmpty (s :: Symbol) :: Constraint where
+  SymbolNonEmpty "" = TypeError ('Text "Symbol is empty")
+  SymbolNonEmpty _ = ()
 
 type family SymbolNoLeadingSpace (s :: Maybe (Char, Symbol)) :: Constraint where
   SymbolNoLeadingSpace 'Nothing = ()
@@ -61,6 +63,7 @@ type family SymbolNoTrailingSpace (s :: Maybe (Char, Symbol)) :: Constraint wher
 -- The type family IsCharWhitespace is large but it is only evaluated for the first and last symbols
 type SymbolWithNoSpaceAround s = (SymbolNoLeadingSpace (UnconsSymbol s), SymbolNoTrailingSpace (UnconsSymbol s)) 
 
-type SymbolNoLongerThan s n = If (SymbolLength 0 (UnconsSymbol s) <=? n)
-  (() :: Constraint)
-  (TypeError ('Text "Invalid NonEmptyText. Needs to be <= " ':<>: 'ShowType n ':<>: 'Text " characters. Has " ':<>: 'ShowType (SymbolLength 0 (UnconsSymbol s)) ':<>: 'Text " characters."))
+type family SymbolNoLongerThan (s :: Symbol) (n :: Nat) :: Constraint where
+  SymbolNoLongerThan s n = If (SymbolLength 0 (UnconsSymbol s) <=? n)
+    (() :: Constraint)
+    (TypeError ('Text "Invalid NonEmptyText. Needs to be <= " ':<>: 'ShowType n ':<>: 'Text " characters. Has " ':<>: 'ShowType (SymbolLength 0 (UnconsSymbol s)) ':<>: 'Text " characters."))
