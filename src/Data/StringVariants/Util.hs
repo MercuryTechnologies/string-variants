@@ -8,7 +8,6 @@ import Data.Proxy
 import Data.Kind (Constraint)
 import Data.Type.Bool
 import Data.Type.Equality
-import GHC.TypeError
 import GHC.TypeLits
 import Prelude
 import Data.Text (Text)
@@ -62,5 +61,6 @@ type family SymbolNoTrailingSpace (s :: Maybe (Char, Symbol)) :: Constraint wher
 -- The type family IsCharWhitespace is large but it is only evaluated for the first and last symbols
 type SymbolWithNoSpaceAround s = (SymbolNoLeadingSpace (UnconsSymbol s), SymbolNoTrailingSpace (UnconsSymbol s)) 
 
-type SymbolNoLongerThan s n = Assert (SymbolLength 0 (UnconsSymbol s) <=? n)
+type SymbolNoLongerThan s n = If (SymbolLength 0 (UnconsSymbol s) <=? n)
+  (() :: Constraint)
   (TypeError ('Text "Invalid NonEmptyText. Needs to be <= " ':<>: 'ShowType n ':<>: 'Text " characters. Has " ':<>: 'ShowType (SymbolLength 0 (UnconsSymbol s)) ':<>: 'Text " characters."))
