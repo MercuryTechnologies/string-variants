@@ -13,6 +13,7 @@ module Data.StringVariants.NonEmptyText
     -- * Construction
     mkNonEmptyText,
     mkNonEmptyTextWithTruncate,
+    literalNonEmptyText,
     unsafeMkNonEmptyText,
     nonEmptyTextToText,
     compileNonEmptyText,
@@ -46,7 +47,7 @@ import Data.StringVariants.Util
 import Data.Text (Text)
 import Data.Text qualified as T
 import GHC.Generics (Generic)
-import GHC.TypeLits (KnownNat, natVal, type (+), type (<=))
+import GHC.TypeLits (KnownNat, KnownSymbol, Symbol, Nat, natVal, symbolVal, type (+), type (<=))
 import Language.Haskell.TH
 import Language.Haskell.TH.Quote
 import Language.Haskell.TH.Syntax (Lift (..))
@@ -71,6 +72,8 @@ compileNonEmptyText n =
       where
         errorMessage = fail $ "Invalid NonEmptyText. Needs to be < " ++ show (n + 1) ++ " characters, and not entirely whitespace: " ++ s
 
+literalNonEmptyText :: forall (s :: Symbol) (n :: Nat). (KnownSymbol s, KnownNat n, SymbolNonEmpty s, SymbolWithNoSpaceAround s, SymbolNoLongerThan s n) => NonEmptyText n
+literalNonEmptyText = NonEmptyText (T.pack (symbolVal (Proxy @s)))
 
 convertEmptyTextToNothing :: Text -> Maybe Text
 convertEmptyTextToNothing t

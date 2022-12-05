@@ -1,5 +1,8 @@
 {-# LANGUAGE TemplateHaskell #-}
 
+-- GHC considers the constraints for the prose symbol redundant.
+{-# OPTIONS_GHC -Wno-redundant-constraints #-}
+
 -- | Internal module of Prose, allowing breaking the abstraction.
 --
 --   Prefer to use "Data.StringVariants.Prose" instead.
@@ -8,9 +11,12 @@ module Data.StringVariants.Prose.Internal where
 import Data.Aeson (FromJSON, ToJSON, ToJSONKey, withText)
 import Data.Aeson.Types (FromJSON (..))
 import Data.String.Conversions (ConvertibleStrings (..), cs)
+import Data.StringVariants.Util (SymbolWithNoSpaceAround)
+import Data.Proxy
 import Data.Text (Text)
 import Data.Text qualified as T
 import Data.Text.Lazy qualified as LT
+import GHC.TypeLits (KnownSymbol, Symbol, symbolVal)
 import Language.Haskell.TH.Quote
 import Language.Haskell.TH.Syntax
 import Prelude
@@ -54,6 +60,9 @@ compileProse =
       Just s' -> [|$(lift s')|]
 
     msg s = "Invalid Prose: " <> s <> ". Make sure you aren't wrapping the text in quotes."
+
+literalProse :: forall (s :: Symbol). (KnownSymbol s, SymbolWithNoSpaceAround s) => Prose
+literalProse = Prose (T.pack (symbolVal (Proxy @s)))
 
 proseToText :: Prose -> Text
 proseToText (Prose txt) = txt

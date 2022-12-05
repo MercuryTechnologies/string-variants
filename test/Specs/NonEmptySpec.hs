@@ -53,6 +53,29 @@ spec = describe "NonEmptyText variants" $ do
         mkNonEmptyText299 "\NUL" `shouldBe` Nothing
         mkNonEmptyText299 "x" `shouldSatisfy` isJust
 
+    describe "literalNonEmptyText" $ do
+      it "should work" $ do
+        Just (literalNonEmptyText @"abc def") `shouldBe` mkNonEmptyText299 "abc def"
+
+-- test cases for bad strings. Alas, the -fdefer-type-errors defers the errors but then happily creates invalid values in runtime. Is this a GHC bug?
+
+      -- describe "rejects invalid strings" $ do
+      --   it "rejects string too long" $ do
+      --     print (literalNonEmptyText @"abcdefghijkl" :: NonEmptyText 10)
+      --       `shouldThrow` (("Invalid NonEmptyText. Needs to be <= 10 characters. Has 12 characters." `isInfixOf`) . show)
+      --   it "rejects empty string" $ do
+      --     print (literalNonEmptyText @"" :: NonEmptyText 10)
+      --       `shouldThrow` (("Symbol is empty" `isInfixOf`) . show)
+      --   it "rejects string with leading whitespace" $ do
+      --     print (literalNonEmptyText @" abc" :: NonEmptyText 10)
+      --       `shouldThrow` (("Symbol has leading whitespace" `isInfixOf`) . show)
+      --   it "rejects string with trailing whitespace" $ do
+      --     print (literalNonEmptyText @"abc " :: NonEmptyText 10)
+      --       `shouldThrow` (("Symbol has leading whitespace" `isInfixOf`) . show)
+      --   it "rejects string with leading unicode whitespace" $ do
+      --     print (literalNonEmptyText @"\x2000abc" :: NonEmptyText 10)
+      --       `shouldThrow` (("Symbol has leading whitespace" `isInfixOf`) . show)
+
     describe "maybeTextToTruncateNullableNonEmptyText" $ do
       it "common behavior" $ do
         maybeTextToTruncateNullableNonEmptyText299 Nothing `shouldBe` NullableNonEmptyText Nothing

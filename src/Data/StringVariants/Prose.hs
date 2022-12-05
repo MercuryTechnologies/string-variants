@@ -3,6 +3,7 @@ module Data.StringVariants.Prose
   ( Prose,
     mkProse,
     compileProse,
+    literalProse,
     proseToText,
   )
 where
