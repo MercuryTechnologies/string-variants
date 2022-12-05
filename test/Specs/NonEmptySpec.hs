@@ -53,6 +53,10 @@ spec = describe "NonEmptyText variants" $ do
         mkNonEmptyText299 "\NUL" `shouldBe` Nothing
         mkNonEmptyText299 "x" `shouldSatisfy` isJust
 
+    describe "literalNonEmptyText" $ do
+      it "should work" $ do
+        Just (literalNonEmptyText @"abc def") `shouldBe` mkNonEmptyText299 "abc def"
+
     describe "maybeTextToTruncateNullableNonEmptyText" $ do
       it "common behavior" $ do
         maybeTextToTruncateNullableNonEmptyText299 Nothing `shouldBe` NullableNonEmptyText Nothing
