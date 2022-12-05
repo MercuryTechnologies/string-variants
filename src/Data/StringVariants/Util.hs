@@ -38,7 +38,7 @@ type IsCharWhitespace c
     (CharToNat c == 32 || CharToNat c - 0x9 <=? 4 || CharToNat c == 0xa0)
     (IsUnicodeWhitespaceCodePoint (CharToNat c))
 
--- Unicode characters with property White_Space=yes and above the ASCII range. It compares whitespace characters are for Unicode 15.0.0.
+-- It checks the whitespace characters (Unicode property White_Space=yes) defined in Unicode 15.0.0 and above the ASCII range.
 type IsUnicodeWhitespaceCodePoint n
   = n == 0x1680
   || (0x2000 <=? n && n <=? 0x200A)
