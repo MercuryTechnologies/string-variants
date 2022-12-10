@@ -3,6 +3,7 @@
 module Specs.TextManipulationSpec (spec) where
 
 import Data.Char
+import Data.List.NonEmpty (NonEmpty (..))
 import Data.StringVariants.NonEmptyText
 import Test.Hspec
 import Prelude
@@ -32,7 +33,7 @@ spec = describe "Text manipulation" do
   describe "chunksOfNonEmptyText" $ do
     it "chunksOfNonEmptyText drops empty chunks" $ do
       chunksOfNonEmptyText [compileNonEmptyTextKnownLength|a   b|]
-        `shouldBe` ([[compileNonEmptyTextKnownLength|a|], [compileNonEmptyTextKnownLength|b|]] :: [NonEmptyText 1])
+        `shouldBe` ([compileNonEmptyTextKnownLength|a|] :| [[compileNonEmptyTextKnownLength|b|]] :: NonEmpty (NonEmptyText 1))
     it "chunksOfNonEmptyText strips chunks" $ do
       chunksOfNonEmptyText [compileNonEmptyTextKnownLength|a   b|]
-        `shouldBe` ([widen [compileNonEmptyTextKnownLength|a|], widen [compileNonEmptyTextKnownLength|b|]] :: [NonEmptyText 2])
+        `shouldBe` (widen [compileNonEmptyTextKnownLength|a|] :| [widen [compileNonEmptyTextKnownLength|b|]] :: NonEmpty (NonEmptyText 2))
