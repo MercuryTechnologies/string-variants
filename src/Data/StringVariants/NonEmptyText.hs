@@ -41,6 +41,7 @@ where
 
 import Control.Monad
 import Data.Data (Proxy (..), typeRep)
+import Data.List.NonEmpty qualified as NE
 import Data.Maybe (mapMaybe)
 import Data.StringVariants.NonEmptyText.Internal
 import Data.StringVariants.Util
@@ -120,9 +121,12 @@ chunksOfNonEmptyText ::
   forall chunkSize totalSize.
   (KnownNat chunkSize, KnownNat totalSize, chunkSize <= totalSize, 1 <= chunkSize) =>
   NonEmptyText totalSize ->
-  [NonEmptyText chunkSize]
+  NE.NonEmpty (NonEmptyText chunkSize)
 chunksOfNonEmptyText (NonEmptyText t) =
-  mapMaybe mkNonEmptyText (T.chunksOf chunkSize t)
+  -- NE.fromList is partial. However, since we know the input
+  -- is nonempty, we're guaranteed to get at least one nonempty
+  -- chunk.
+  NE.fromList $ mapMaybe mkNonEmptyText (T.chunksOf chunkSize t)
   where
     chunkSize = fromIntegral $ natVal (Proxy @chunkSize)
 
