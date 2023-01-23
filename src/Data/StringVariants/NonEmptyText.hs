@@ -123,11 +123,13 @@ chunksOfNonEmptyText ::
   NonEmptyText totalSize ->
   NE.NonEmpty (NonEmptyText chunkSize)
 chunksOfNonEmptyText (NonEmptyText t) =
-  -- NE.fromList is partial. However, since we know the input
-  -- is nonempty, we're guaranteed to get at least one nonempty
-  -- chunk.
-  NE.fromList $ mapMaybe mkNonEmptyText (T.chunksOf chunkSize t)
+  case mNonEmptyChunks of
+    Nothing -> error $ "chunksOfNonEmptyText: invalid input: " <> show t
+    Just chunks -> chunks
   where
+    -- The function NE.nonEmpty is safer than partial NE.fromList.
+    -- If the input NonEmptyText is invalid, we want to return a detailed error message.
+    mNonEmptyChunks = NE.nonEmpty $ mapMaybe mkNonEmptyText (T.chunksOf chunkSize t)
     chunkSize = fromIntegral $ natVal (Proxy @chunkSize)
 
 -- | Concat two NonEmptyText values, with the new maximum length being the sum of the two
