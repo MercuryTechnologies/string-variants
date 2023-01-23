@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.2.1.0] - 2023-01-23
+
+- Use `NonEmptyList` for `chunksOfNonEmptyText`
+
 ## [0.2.0.0] - 2022-12-05
 
 - Add `literalNonEmptyText`, `literalProse`, `literalNullableNonEmptyText` for creation of string variants from the type-level literals.
