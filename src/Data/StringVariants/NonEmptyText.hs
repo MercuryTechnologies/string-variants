@@ -15,13 +15,13 @@ module Data.StringVariants.NonEmptyText
     mkNonEmptyTextWithTruncate,
     literalNonEmptyText,
     unsafeMkNonEmptyText,
-    nonEmptyTextToText,
     compileNonEmptyText,
     compileNonEmptyTextKnownLength,
     convertEmptyTextToNothing,
 
     -- * Conversion
     widen,
+    nonEmptyTextToText,
 
     -- * Functions
     takeNonEmptyText,

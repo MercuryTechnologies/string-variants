@@ -5,6 +5,7 @@ module Data.StringVariants.Prose
     compileProse,
     literalProse,
     proseToText,
+    proseFromNonEmptyText
   )
 where
 

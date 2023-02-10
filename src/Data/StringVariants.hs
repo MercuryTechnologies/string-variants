@@ -34,6 +34,7 @@ module Data.StringVariants
     mkProse,
     compileProse,
     proseToText,
+    proseFromNonEmptyText,
 
     -- * Nullable non empty text
     NullableNonEmptyText (..),

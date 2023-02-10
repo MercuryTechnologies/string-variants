@@ -11,6 +11,7 @@ module Data.StringVariants.Prose.Internal where
 import Data.Aeson (FromJSON, ToJSON, ToJSONKey, withText)
 import Data.Aeson.Types (FromJSON (..))
 import Data.String.Conversions (ConvertibleStrings (..), cs)
+import Data.StringVariants.NonEmptyText.Internal (NonEmptyText (..))
 import Data.StringVariants.Util (SymbolWithNoSpaceAround)
 import Data.Proxy
 import Data.Text (Text)
@@ -45,6 +46,9 @@ mkProse :: Text -> Maybe Prose
 mkProse t = case T.strip t of
   "" -> Nothing
   t' -> Just (Prose t')
+
+proseFromNonEmptyText :: NonEmptyText n -> Prose
+proseFromNonEmptyText (NonEmptyText t) = Prose (T.strip t)
 
 compileProse :: QuasiQuoter
 compileProse =
