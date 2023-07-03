@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE UndecidableInstances #-}
@@ -59,7 +60,7 @@ import Prelude
 --   use 'nullableNonEmptyTextToMaybeNonEmptyText'.
 newtype NullableNonEmptyText n = NullableNonEmptyText (Maybe (NonEmptyText n))
   deriving stock (Generic, Show, Read, Lift)
-  deriving newtype (Eq, ToJSON)
+  deriving newtype (Eq)
 
 mkNullableNonEmptyText :: forall n. (KnownNat n, 1 <= n) => Text -> Maybe (NullableNonEmptyText n)
 mkNullableNonEmptyText t
@@ -72,6 +73,16 @@ nullNonEmptyText = NullableNonEmptyText Nothing
 isNullNonEmptyText :: NullableNonEmptyText n -> Bool
 isNullNonEmptyText = (== nullNonEmptyText)
 
+instance ToJSON (NullableNonEmptyText n) where
+  toJSON (NullableNonEmptyText t) = toJSON t
+
+  toEncoding (NullableNonEmptyText t) = toEncoding t
+
+#if MIN_VERSION_aeson(2,2,0)
+  omitField (NullableNonEmptyText Nothing) = True
+  omitField _ = False
+#endif
+
 instance (KnownNat n, 1 <= n) => FromJSON (NullableNonEmptyText n) where
   parseJSON = \case
     J.String t -> case mkNullableNonEmptyText t of
@@ -79,6 +90,10 @@ instance (KnownNat n, 1 <= n) => FromJSON (NullableNonEmptyText n) where
       Nothing -> fail $ "Data/StringVariants/NullableNonEmptyText.hs: When trying to parse a NullableNonEmptyText, expected a String of length < " ++ show (natVal (Proxy @n)) ++ ", but received: " ++ T.unpack t
     J.Null -> pure $ NullableNonEmptyText Nothing
     x -> fail $ "Data/StringVariants/NullableNonEmptyText.hs: When trying to parse a NullableNonEmptyText, expected a String or Null, but received: " ++ show x
+
+#if MIN_VERSION_aeson(2,2,0)
+  omittedField = Just (NullableNonEmptyText Nothing)
+#endif
 
 parseNullableNonEmptyText :: (KnownNat n, 1 <= n) => Text -> J.Object -> J.Parser (NullableNonEmptyText n)
 parseNullableNonEmptyText fieldName obj = obj .:? J.fromText fieldName .!= nullNonEmptyText

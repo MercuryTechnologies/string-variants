@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.2.2.1] - 2023-06-20
+
+- Add support for `aeson-2.2.0.0`.
+- When built with `aeson >=2.2.0.0`, record fields with type `NullableNonEmptyText` will be omittable.
+
 ## [0.2.2.0] - 2023-02-10
 
 - Add `proseFromNonEmptyText` to create `Prose` from `NonEmptyText`.
