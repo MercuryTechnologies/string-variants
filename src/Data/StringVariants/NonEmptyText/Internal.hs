@@ -39,7 +39,7 @@ instance (KnownNat n, 1 <= n) => FromJSON (NonEmptyText n) where
   parseJSON = withText "NonEmptyText" $ \t -> do
     performInboundValidations t
     case mkNonEmptyText t of
-      Nothing -> fail $ "Data/StringVariants/NonEmptyText.hs: invalid NonEmptyText: " ++ T.unpack t
+      Nothing -> fail $ "Invalid NonEmptyText: expected length >= " ++ show (natVal (Proxy @n)) ++ " for body: " ++ T.unpack t
       Just nonEmptyText -> pure nonEmptyText
     where
       -- These validations are performed at the edge of the system rather than in
@@ -69,7 +69,7 @@ instance ConvertibleStrings (NonEmptyText n) ByteString where
 instance (KnownNat n, 1 <= n) => Arbitrary (NonEmptyText n) where
   arbitrary =
     NonEmptyText @n <$> do
-      size <- chooseInt (1, fromIntegral (natVal (Proxy :: Proxy n)) - 1)
+      size <- chooseInt (1, fromIntegral (natVal (Proxy @n)) - 1)
       -- Mostly alphanumeric characters, all human readable
       str <- replicateM size $ elements ['0' .. 'z']
       pure $ T.pack str
