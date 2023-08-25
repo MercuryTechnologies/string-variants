@@ -30,8 +30,11 @@ library
       Data.StringVariants.NonEmptyText
       Data.StringVariants.NonEmptyText.Internal
       Data.StringVariants.NullableNonEmptyText
+      Data.StringVariants.NullableRangedText
       Data.StringVariants.Prose
       Data.StringVariants.Prose.Internal
+      Data.StringVariants.RangedText
+      Data.StringVariants.RangedText.Internal
       Data.StringVariants.Util
   other-modules:
       Paths_string_variants
@@ -93,6 +96,8 @@ test-suite test
   other-modules:
       Spec
       Specs.NonEmptySpec
+      Specs.RangedManipulationSpec
+      Specs.RangedSpec
       Specs.TextManipulationSpec
       Paths_string_variants
   hs-source-dirs:
