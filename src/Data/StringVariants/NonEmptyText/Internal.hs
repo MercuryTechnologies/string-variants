@@ -28,7 +28,7 @@ import Language.Haskell.TH.Syntax (Lift (..), TyLit (..), Type (..))
 import Test.QuickCheck
 import Prelude
 
--- | Non Empty Text, requires the input is between 1 and @n@ chars and not just whitespace.
+-- | Non Empty Text, requires the input is at least 1 and  greater than or equal to @n@ chars and not just whitespace.
 newtype NonEmptyText (n :: Nat) = NonEmptyText Text
   deriving stock (Generic, Show, Read, Lift)
   deriving newtype (Eq, Ord, ToJSON, Semigroup, MonoFoldable)
@@ -76,7 +76,7 @@ instance (KnownNat n, 1 <= n) => Arbitrary (NonEmptyText n) where
 
 mkNonEmptyText :: forall n. (KnownNat n, 1 <= n) => Text -> Maybe (NonEmptyText n)
 mkNonEmptyText t
-  | T.compareLength stripped (fromIntegral $ natVal (Proxy @n)) == GT = Nothing
+  | T.compareLength stripped (fromIntegral $ natVal (Proxy @n)) == LT = Nothing
   | textIsWhitespace stripped = Nothing
   | otherwise = Just (NonEmptyText stripped)
   where

@@ -73,7 +73,7 @@ compileNonEmptyText n =
       where
         errorMessage = fail $ "Invalid NonEmptyText. Needs to be < " ++ show (n + 1) ++ " characters, and not entirely whitespace: " ++ s
 
-literalNonEmptyText :: forall (s :: Symbol) (n :: Nat). (KnownSymbol s, KnownNat n, SymbolNonEmpty s, SymbolWithNoSpaceAround s, SymbolNoLongerThan s n) => NonEmptyText n
+literalNonEmptyText :: forall (s :: Symbol) (n :: Nat). (KnownSymbol s, KnownNat n, SymbolNonEmpty s, SymbolWithNoSpaceAround s, SymbolLongerThan s n) => NonEmptyText n
 literalNonEmptyText = NonEmptyText (T.pack (symbolVal (Proxy @s)))
 
 convertEmptyTextToNothing :: Text -> Maybe Text
@@ -89,7 +89,7 @@ nonEmptyTextToText (NonEmptyText t) = t
 -- rewrapping the text.
 --
 -- Will return Nothing if the resulting length is zero.
-filterNonEmptyText :: (KnownNat n, 1 <= n) => (Char -> Bool) -> NonEmptyText n -> Maybe (NonEmptyText n)
+filterNonEmptyText :: forall m n. (KnownNat m, KnownNat n, 1 <= n, n <= m) => (Char -> Bool) -> NonEmptyText m -> Maybe (NonEmptyText n)
 filterNonEmptyText f (NonEmptyText t) = mkNonEmptyText (T.filter f t)
 
 -- | Narrows the maximum length, dropping any remaining trailing characters.

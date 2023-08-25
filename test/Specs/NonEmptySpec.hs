@@ -21,6 +21,9 @@ import Test.Hspec.Hedgehog (hedgehog)
 mkNonEmptyText299 :: Text -> Maybe (NonEmptyText 299)
 mkNonEmptyText299 = mkNonEmptyText
 
+mkNonEmptyText2 :: Text -> Maybe (NonEmptyText 2)
+mkNonEmptyText2 = mkNonEmptyText
+
 maybeTextToTruncateNullableNonEmptyText299 :: Maybe Text -> NullableNonEmptyText 299
 maybeTextToTruncateNullableNonEmptyText299 = maybeTextToTruncateNullableNonEmptyText
 
@@ -32,10 +35,10 @@ matchLength _ = id
 
 spec :: Spec
 spec = describe "NonEmptyText variants" $ do
+  describe "compileNonEmptyText" $ do
+    it "should work" $ do
+      mkNonEmptyText "hi" `shouldBe` Just ([compileNonEmptyTextKnownLength|hi|])
   describe "NonEmptyText299" $ do
-    describe "compileNonEmptyText" $ do
-      it "should work" $ do
-        mkNonEmptyText299 "hi" `shouldBe` Just (widen [compileNonEmptyTextKnownLength|hi|])
     describe "compileNullableNonEmptyText" $ do
       it "should work" $ do
         $(quoteExp (compileNullableNonEmptyText 2) "yo") `shouldBe` NullableNonEmptyText (Just [compileNonEmptyTextKnownLength|yo|])
@@ -46,16 +49,17 @@ spec = describe "NonEmptyText variants" $ do
   describe "Generalized NonEmptyText" $ do
     describe "mkNonEmptyText" $
       it "should work" $ do
-        mkNonEmptyText299 "" `shouldBe` Nothing
-        mkNonEmptyText299 " " `shouldBe` Nothing
-        mkNonEmptyText299 "\n" `shouldBe` Nothing
-        mkNonEmptyText299 "\t" `shouldBe` Nothing
-        mkNonEmptyText299 "\NUL" `shouldBe` Nothing
-        mkNonEmptyText299 "x" `shouldSatisfy` isJust
+        mkNonEmptyText2 "" `shouldBe` Nothing
+        mkNonEmptyText2 " " `shouldBe` Nothing
+        mkNonEmptyText2 "\n" `shouldBe` Nothing
+        mkNonEmptyText2 "\t" `shouldBe` Nothing
+        mkNonEmptyText2 "\NUL" `shouldBe` Nothing
+        (widen <$> mkNonEmptyText2 "xyz") `shouldBe` Just ( [compileNonEmptyTextKnownLength|xyz|] )
+        mkNonEmptyText299 "x" `shouldBe` Nothing
 
     describe "literalNonEmptyText" $ do
       it "should work" $ do
-        Just (literalNonEmptyText @"abc def") `shouldBe` mkNonEmptyText299 "abc def"
+        Just (literalNonEmptyText @"abc def") `shouldBe` mkNonEmptyText2 "abc def"
 
 -- test cases for bad strings. Alas, the -fdefer-type-errors defers the errors but then happily creates invalid values in runtime. Is this a GHC bug?
 

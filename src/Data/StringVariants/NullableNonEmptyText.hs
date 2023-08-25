@@ -135,5 +135,5 @@ compileNullableNonEmptyText n =
         errorMessage = fail $ "Invalid NullableNonEmptyText. Needs to be < " ++ show (n + 1) ++ " characters, and not entirely whitespace: " ++ s
 
 -- | This requires the text to be non-empty. For the empty text just use the constructor `NullableNonEmptyText Nothing`
-literalNullableNonEmptyText :: forall (s :: Symbol) (n :: Nat). (KnownSymbol s, KnownNat n, SymbolNonEmpty s, SymbolWithNoSpaceAround s, SymbolNoLongerThan s n) => NullableNonEmptyText n
+literalNullableNonEmptyText :: forall (s :: Symbol) (n :: Nat). (KnownSymbol s, KnownNat n, SymbolNonEmpty s, SymbolWithNoSpaceAround s, SymbolLongerThan s n) => NullableNonEmptyText n
 literalNullableNonEmptyText = NullableNonEmptyText (Just (literalNonEmptyText @s @n))

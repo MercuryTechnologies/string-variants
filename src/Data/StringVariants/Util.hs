@@ -2,7 +2,7 @@
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Data.StringVariants.Util (SymbolNonEmpty, SymbolWithNoSpaceAround, SymbolNoLongerThan, usePositiveNat, textIsWhitespace, textHasNoMeaningfulContent) where
+module Data.StringVariants.Util (SymbolNonEmpty, SymbolWithNoSpaceAround, SymbolNoLongerThan, SymbolLongerThan, usePositiveNat, textIsWhitespace, textHasNoMeaningfulContent) where
 
 import Data.Proxy
 import Data.Kind (Constraint)
@@ -62,6 +62,11 @@ type family SymbolNoTrailingSpace (s :: Maybe (Char, Symbol)) :: Constraint wher
 
 -- The type family IsCharWhitespace is large but it is only evaluated for the first and last symbols
 type SymbolWithNoSpaceAround s = (SymbolNoLeadingSpace (UnconsSymbol s), SymbolNoTrailingSpace (UnconsSymbol s)) 
+
+type family SymbolLongerThan (s :: Symbol) (n :: Nat) :: Constraint where
+  SymbolLongerThan s n = If (n <=? SymbolLength 0 (UnconsSymbol s))
+    (() :: Constraint)
+    (TypeError ('Text "Invalid NonEmptyText. Needs to be >= " ':<>: 'ShowType n ':<>: 'Text " characters. Has " ':<>: 'ShowType (SymbolLength 0 (UnconsSymbol s)) ':<>: 'Text " characters."))
 
 type family SymbolNoLongerThan (s :: Symbol) (n :: Nat) :: Constraint where
   SymbolNoLongerThan s n = If (SymbolLength 0 (UnconsSymbol s) <=? n)

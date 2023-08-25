@@ -12,13 +12,13 @@ spec :: Spec
 spec = describe "Text manipulation" do
   describe "filterNonEmptyText" $ do
     it "filterNonEmptyText returns Nothing when filtered string is empty" do
-      filterNonEmptyText (const False) [compileNonEmptyTextKnownLength|abc|] `shouldBe` Nothing
+      filterNonEmptyText (const False) [compileNonEmptyTextKnownLength|abc|] `shouldBe` (Nothing :: Maybe (NonEmptyText 1))
 
     it "filterNonEmptyText returns Nothing when filtered string only has spaces" do
-      filterNonEmptyText isSpace [compileNonEmptyTextKnownLength|a b|] `shouldBe` Nothing
+      filterNonEmptyText isSpace [compileNonEmptyTextKnownLength|a b|] `shouldBe` (Nothing :: Maybe (NonEmptyText 1))
 
     it "filterNonEmptyText returns stripped text" do
-      filterNonEmptyText (/= 'a') [compileNonEmptyTextKnownLength|a b a|] `shouldBe` Just (widen [compileNonEmptyTextKnownLength|b|])
+      filterNonEmptyText (/= 'a') [compileNonEmptyTextKnownLength|a b a|] `shouldBe` Just ([compileNonEmptyTextKnownLength|b|])
 
   describe "takeNonEmptyText" $ do
     it "takeNonEmptyText returns stripped text" do
@@ -35,5 +35,5 @@ spec = describe "Text manipulation" do
       chunksOfNonEmptyText [compileNonEmptyTextKnownLength|a   b|]
         `shouldBe` ([compileNonEmptyTextKnownLength|a|] :| [[compileNonEmptyTextKnownLength|b|]] :: NonEmpty (NonEmptyText 1))
     it "chunksOfNonEmptyText strips chunks" $ do
-      chunksOfNonEmptyText [compileNonEmptyTextKnownLength|a   b|]
-        `shouldBe` (widen [compileNonEmptyTextKnownLength|a|] :| [widen [compileNonEmptyTextKnownLength|b|]] :: NonEmpty (NonEmptyText 2))
+      chunksOfNonEmptyText [compileNonEmptyTextKnownLength|abc   def|]
+        `shouldBe` ([compileNonEmptyTextKnownLength|abc|] :| [[compileNonEmptyTextKnownLength|def|]] :: NonEmpty (NonEmptyText 3))
