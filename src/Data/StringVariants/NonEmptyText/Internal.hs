@@ -76,7 +76,7 @@ instance (KnownNat n, 1 <= n) => Arbitrary (NonEmptyText n) where
 
 mkNonEmptyText :: forall n. (KnownNat n, 1 <= n) => Text -> Maybe (NonEmptyText n)
 mkNonEmptyText t
-  | T.compareLength stripped (fromIntegral $ natVal (Proxy @n)) == GT = Nothing
+  | T.compareLength stripped (fromIntegral $ natVal (Proxy @n)) == LT = Nothing
   | textIsWhitespace stripped = Nothing
   | otherwise = Just (NonEmptyText stripped)
   where
