@@ -1,4 +1,5 @@
 {-# LANGUAGE CPP #-}
+{-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE UndecidableInstances #-}
@@ -10,6 +11,7 @@ module Data.StringVariants.NullableNonEmptyText
     -- * Constructing
     mkNonEmptyTextWithTruncate,
     compileNullableNonEmptyText,
+    IsNullableNonEmptyText,
     literalNullableNonEmptyText,
     mkNullableNonEmptyText,
     parseNullableNonEmptyText,
@@ -134,6 +136,14 @@ compileNullableNonEmptyText n =
       where
         errorMessage = fail $ "Invalid NullableNonEmptyText. Needs to be < " ++ show (n + 1) ++ " characters, and not entirely whitespace: " ++ s
 
+type IsNullableNonEmptyText n s =
+  ( KnownSymbol s
+  , KnownNat n
+  , SymbolNonEmpty s
+  , SymbolWithNoSpaceAround s
+  , SymbolNoLongerThan s n
+  )
+
 -- | This requires the text to be non-empty. For the empty text just use the constructor `NullableNonEmptyText Nothing`
-literalNullableNonEmptyText :: forall (s :: Symbol) (n :: Nat). (KnownSymbol s, KnownNat n, SymbolNonEmpty s, SymbolWithNoSpaceAround s, SymbolNoLongerThan s n) => NullableNonEmptyText n
+literalNullableNonEmptyText :: forall (s :: Symbol) (n :: Nat). IsNullableNonEmptyText n s => NullableNonEmptyText n
 literalNullableNonEmptyText = NullableNonEmptyText (Just (literalNonEmptyText @s @n))

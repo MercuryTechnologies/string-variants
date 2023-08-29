@@ -1,3 +1,4 @@
+{-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeOperators #-}
 {-# OPTIONS_GHC -Wno-redundant-constraints #-}
@@ -13,6 +14,7 @@ module Data.StringVariants.NonEmptyText
     -- * Construction
     mkNonEmptyText,
     mkNonEmptyTextWithTruncate,
+    IsNonEmptyText,
     literalNonEmptyText,
     unsafeMkNonEmptyText,
     compileNonEmptyText,
@@ -73,7 +75,15 @@ compileNonEmptyText n =
       where
         errorMessage = fail $ "Invalid NonEmptyText. Needs to be < " ++ show (n + 1) ++ " characters, and not entirely whitespace: " ++ s
 
-literalNonEmptyText :: forall (s :: Symbol) (n :: Nat). (KnownSymbol s, KnownNat n, SymbolNonEmpty s, SymbolWithNoSpaceAround s, SymbolNoLongerThan s n) => NonEmptyText n
+type IsNonEmptyText n s =
+  ( KnownSymbol s
+  , KnownNat n
+  , SymbolNonEmpty s
+  , SymbolWithNoSpaceAround s
+  , SymbolNoLongerThan s n
+  )
+
+literalNonEmptyText :: forall (s :: Symbol) (n :: Nat). IsNonEmptyText n s => NonEmptyText n
 literalNonEmptyText = NonEmptyText (T.pack (symbolVal (Proxy @s)))
 
 convertEmptyTextToNothing :: Text -> Maybe Text
