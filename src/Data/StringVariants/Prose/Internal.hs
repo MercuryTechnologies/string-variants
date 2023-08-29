@@ -1,3 +1,4 @@
+{-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE TemplateHaskell #-}
 
 -- GHC considers the constraints for the prose symbol redundant.
@@ -65,7 +66,12 @@ compileProse =
 
     msg s = "Invalid Prose: " <> s <> ". Make sure you aren't wrapping the text in quotes."
 
-literalProse :: forall (s :: Symbol). (KnownSymbol s, SymbolWithNoSpaceAround s) => Prose
+type IsProse s =
+  ( KnownSymbol s
+  , SymbolWithNoSpaceAround s
+  )
+
+literalProse :: forall (s :: Symbol). IsProse s => Prose
 literalProse = Prose (T.pack (symbolVal (Proxy @s)))
 
 proseToText :: Prose -> Text
