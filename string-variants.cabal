@@ -84,6 +84,8 @@ library
     , bytestring
     , http-api-data
     , mono-traversable
+    , mysql-extras
+    , mysql-simple
     , refined
     , refinery
     , string-conversions
@@ -155,6 +157,8 @@ test-suite test
     , hspec-hedgehog
     , http-api-data
     , mono-traversable
+    , mysql-extras
+    , mysql-simple
     , refined
     , refinery
     , string-conversions

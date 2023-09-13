@@ -25,6 +25,8 @@ dependencies:
   - refined
   - text
   - http-api-data
+  - mysql-simple
+  - mysql-extras
 
 library:
   source-dirs: src

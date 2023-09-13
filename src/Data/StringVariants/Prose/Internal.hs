@@ -16,6 +16,10 @@ import Data.StringVariants.Util (SymbolWithNoSpaceAround)
 import Data.Text (Text)
 import Data.Text qualified as T
 import Data.Text.Lazy qualified as LT
+import Data.Typeable
+import Database.MySQL.Simple qualified as SQL
+import Database.MySQL.Simple.Result qualified as SQL
+import Database.MySQL.Simple.Utils qualified as SQL
 import GHC.TypeLits (KnownSymbol, Symbol, symbolVal)
 import Language.Haskell.TH.Quote
 import Language.Haskell.TH.Syntax
@@ -30,7 +34,13 @@ import Prelude
 newtype Prose = Prose Text
   deriving stock (Eq, Lift, Ord)
   deriving newtype (Semigroup, ToJSON, ToJSONKey)
-  deriving (Show, ToHttpApiData) via Text
+  deriving (Show, ToHttpApiData, SQL.Param) via Text
+
+instance SQL.Result Prose where
+  convert f bs = case mkProse $ SQL.convert f bs of
+    Just p -> p
+    Nothing ->
+      SQL.conversionFailed f (typeRep (Proxy @Prose)) "mkProse failed"
 
 instance FromHttpApiData Prose where
   parseUrlPiece t = case mkProse t of

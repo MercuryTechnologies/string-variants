@@ -40,7 +40,9 @@ packages:
 # - git: https://github.com/commercialhaskell/stack.git
 #   commit: e7b331f14bcffb8367cd58fbfc8b40ec7642100a
 #
-# extra-deps: []
+extra-deps:
+- git: git@github.com:MackeyRMS/mysql-extras
+  commit: 8904a46a1247402079aa83c88cb5a5ef70af231a
 
 # Override default flag values for local packages and extra-deps
 # flags: {}
