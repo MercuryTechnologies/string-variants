@@ -1,5 +1,4 @@
 {-# LANGUAGE TemplateHaskell #-}
-
 -- GHC considers the constraints for the prose symbol redundant.
 {-# OPTIONS_GHC -Wno-redundant-constraints #-}
 
@@ -10,16 +9,17 @@ module Data.StringVariants.Prose.Internal where
 
 import Data.Aeson (FromJSON, ToJSON, ToJSONKey, withText)
 import Data.Aeson.Types (FromJSON (..))
+import Data.Proxy
 import Data.String.Conversions (ConvertibleStrings (..), cs)
 import Data.StringVariants.NonEmptyText.Internal (NonEmptyText (..))
 import Data.StringVariants.Util (SymbolWithNoSpaceAround)
-import Data.Proxy
 import Data.Text (Text)
 import Data.Text qualified as T
 import Data.Text.Lazy qualified as LT
 import GHC.TypeLits (KnownSymbol, Symbol, symbolVal)
 import Language.Haskell.TH.Quote
 import Language.Haskell.TH.Syntax
+import Web.HttpApiData
 import Prelude
 
 -- | Whitespace-trimmed, non-empty text, for use with API endpoints.
@@ -28,8 +28,14 @@ import Prelude
 -- Not suitable for database fields, as there is no character limit (see
 -- 'ProsePersistFieldMsg').
 newtype Prose = Prose Text
-  deriving stock (Eq, Lift, Ord, Show)
+  deriving stock (Eq, Lift, Ord)
   deriving newtype (Semigroup, ToJSON, ToJSONKey)
+  deriving (Show, ToHttpApiData) via Text
+
+instance FromHttpApiData Prose where
+  parseUrlPiece t = case mkProse t of
+    Just p -> Right p
+    Nothing -> Left $ "Failed to parse Prose from " <> t
 
 instance ConvertibleStrings Prose Text where
   convertString (Prose t) = t
@@ -58,12 +64,12 @@ compileProse =
     , quotePat = error "Prose is not a pattern; use `proseToText` instead"
     , ..
     }
-  where
-    quoteExp s = case mkProse (T.pack s) of
-      Nothing -> fail (msg s)
-      Just s' -> [|$(lift s')|]
+ where
+  quoteExp s = case mkProse (T.pack s) of
+    Nothing -> fail (msg s)
+    Just s' -> [|$(lift s')|]
 
-    msg s = "Invalid Prose: " <> s <> ". Make sure you aren't wrapping the text in quotes."
+  msg s = "Invalid Prose: " <> s <> ". Make sure you aren't wrapping the text in quotes."
 
 literalProse :: forall (s :: Symbol). (KnownSymbol s, SymbolWithNoSpaceAround s) => Prose
 literalProse = Prose (T.pack (symbolVal (Proxy @s)))
