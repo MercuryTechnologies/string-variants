@@ -15,6 +15,7 @@ import Data.Aeson (FromJSON (..), ToJSON, withText)
 import Data.ByteString
 import Data.Coerce
 import Data.MonoTraversable
+import Data.OpenApi
 import Data.Proxy
 import Data.Sequences
 import Data.String.Conversions (ConvertibleStrings (..), cs)
@@ -31,6 +32,7 @@ import Prelude
 -- | Non Empty Text, requires the input is at least 1 and  greater than or equal to @n@ chars and not just whitespace.
 newtype NonEmptyText (n :: Nat) = NonEmptyText Text
   deriving stock (Generic, Show, Read, Lift)
+  deriving anyclass (ToSchema)
   deriving newtype (Eq, Ord, ToJSON, Semigroup, MonoFoldable)
 
 type instance Element (NonEmptyText _n) = Char

@@ -1,6 +1,6 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.35.1.
+-- This file has been generated from package.yaml by hpack version 0.35.2.
 --
 -- see: https://github.com/sol/hpack
 
@@ -86,6 +86,7 @@ library
     , mono-traversable
     , mysql-extras
     , mysql-simple
+    , openapi3
     , refined
     , refinery
     , string-conversions
@@ -159,6 +160,7 @@ test-suite test
     , mono-traversable
     , mysql-extras
     , mysql-simple
+    , openapi3
     , refined
     , refinery
     , string-conversions

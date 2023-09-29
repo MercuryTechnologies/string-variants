@@ -25,6 +25,7 @@ dependencies:
   - refined
   - text
   - http-api-data
+  - openapi3
   - mysql-simple
   - mysql-extras
 

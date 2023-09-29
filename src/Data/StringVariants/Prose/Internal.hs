@@ -9,6 +9,7 @@ module Data.StringVariants.Prose.Internal where
 
 import Data.Aeson (FromJSON, ToJSON, ToJSONKey, withText)
 import Data.Aeson.Types (FromJSON (..))
+import Data.OpenApi
 import Data.Proxy
 import Data.String.Conversions (ConvertibleStrings (..), cs)
 import Data.StringVariants.NonEmptyText.Internal (NonEmptyText (..))
@@ -20,6 +21,7 @@ import Data.Typeable
 import Database.MySQL.Simple qualified as SQL
 import Database.MySQL.Simple.Result qualified as SQL
 import Database.MySQL.Simple.Utils qualified as SQL
+import GHC.Generics (Generic)
 import GHC.TypeLits (KnownSymbol, Symbol, symbolVal)
 import Language.Haskell.TH.Quote
 import Language.Haskell.TH.Syntax
@@ -32,7 +34,8 @@ import Prelude
 -- Not suitable for database fields, as there is no character limit (see
 -- 'ProsePersistFieldMsg').
 newtype Prose = Prose Text
-  deriving stock (Eq, Lift, Ord)
+  deriving stock (Eq, Lift, Ord, Generic)
+  deriving anyclass (ToSchema)
   deriving newtype (Semigroup, ToJSON, ToJSONKey)
   deriving (Show, ToHttpApiData, SQL.Param) via Text
 
