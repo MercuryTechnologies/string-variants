@@ -1,6 +1,6 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.35.2.
+-- This file has been generated from package.yaml by hpack version 0.35.1.
 --
 -- see: https://github.com/sol/hpack
 
@@ -82,7 +82,10 @@ library
     , aeson >=2.0.0.0
     , base >=4.16 && <5
     , bytestring
+    , http-api-data
     , mono-traversable
+    , mysql-extras
+    , mysql-simple
     , refined
     , refinery
     , string-conversions
@@ -152,7 +155,10 @@ test-suite test
     , hspec-core
     , hspec-expectations
     , hspec-hedgehog
+    , http-api-data
     , mono-traversable
+    , mysql-extras
+    , mysql-simple
     , refined
     , refinery
     , string-conversions
