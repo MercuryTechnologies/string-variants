@@ -32,8 +32,14 @@ import Prelude
 -- | Non Empty Text, requires the input is at least 1 and  greater than or equal to @n@ chars and not just whitespace.
 newtype NonEmptyText (n :: Nat) = NonEmptyText Text
   deriving stock (Generic, Show, Read, Lift)
-  deriving anyclass (ToSchema)
   deriving newtype (Eq, Ord, ToJSON, Semigroup, MonoFoldable)
+
+instance (KnownNat n, 1 <= n) => ToParamSchema (NonEmptyText n) where
+  toParamSchema _ =
+    mempty
+      { _schemaType = Just OpenApiString
+      , _schemaMinLength = Just (natVal (Proxy @n))
+      }
 
 type instance Element (NonEmptyText _n) = Char
 

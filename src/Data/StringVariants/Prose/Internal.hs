@@ -35,9 +35,15 @@ import Prelude
 -- 'ProsePersistFieldMsg').
 newtype Prose = Prose Text
   deriving stock (Eq, Lift, Ord, Generic)
-  deriving anyclass (ToSchema)
   deriving newtype (Semigroup, ToJSON, ToJSONKey)
   deriving (Show, ToHttpApiData, SQL.Param) via Text
+
+instance ToParamSchema Prose where
+  toParamSchema _ =
+    mempty
+      { _schemaType = Just OpenApiString
+      , _schemaMinLength = Just 1
+      }
 
 instance SQL.Result Prose where
   convert f bs = case mkProse $ SQL.convert f bs of
