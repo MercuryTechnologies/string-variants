@@ -16,6 +16,7 @@ import Data.ByteString
 import Data.Coerce
 import Data.MonoTraversable
 import Data.OpenApi
+import Data.OpenApi.Internal.Schema (plain)
 import Data.Proxy
 import Data.Sequences
 import Data.String.Conversions (ConvertibleStrings (..), cs)
@@ -33,6 +34,9 @@ import Prelude
 newtype NonEmptyText (n :: Nat) = NonEmptyText Text
   deriving stock (Generic, Show, Read, Lift)
   deriving newtype (Eq, Ord, ToJSON, Semigroup, MonoFoldable)
+
+instance (KnownNat n, 1 <= n) => ToSchema (NonEmptyText n) where
+  declareNamedSchema = plain . paramSchemaToSchema
 
 instance (KnownNat n, 1 <= n) => ToParamSchema (NonEmptyText n) where
   toParamSchema _ =

@@ -10,6 +10,7 @@ module Data.StringVariants.Prose.Internal where
 import Data.Aeson (FromJSON, ToJSON, ToJSONKey, withText)
 import Data.Aeson.Types (FromJSON (..))
 import Data.OpenApi
+import Data.OpenApi.Internal.Schema (plain)
 import Data.Proxy
 import Data.String.Conversions (ConvertibleStrings (..), cs)
 import Data.StringVariants.NonEmptyText.Internal (NonEmptyText (..))
@@ -37,6 +38,9 @@ newtype Prose = Prose Text
   deriving stock (Eq, Lift, Ord, Generic)
   deriving newtype (Semigroup, ToJSON, ToJSONKey)
   deriving (Show, ToHttpApiData, SQL.Param) via Text
+
+instance ToSchema Prose where
+  declareNamedSchema = plain . paramSchemaToSchema
 
 instance ToParamSchema Prose where
   toParamSchema _ =
