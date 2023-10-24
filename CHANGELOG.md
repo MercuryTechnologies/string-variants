@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.3.0.0] - 2023-10-24
+
+- Remove incorrect `Semigroup` instance for `NonEmptyText`
+
 ## [0.2.2.1] - 2023-06-20
 
 - Add support for `aeson-2.2.0.0`.
