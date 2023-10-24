@@ -31,7 +31,7 @@ import Prelude
 -- | Non Empty Text, requires the input is between 1 and @n@ chars and not just whitespace.
 newtype NonEmptyText (n :: Nat) = NonEmptyText Text
   deriving stock (Generic, Show, Read, Lift)
-  deriving newtype (Eq, Ord, ToJSON, Semigroup, MonoFoldable)
+  deriving newtype (Eq, Ord, ToJSON, MonoFoldable)
 
 type instance Element (NonEmptyText _n) = Char
 
