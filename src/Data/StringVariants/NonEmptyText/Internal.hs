@@ -22,7 +22,7 @@ import Data.StringVariants.Util (textHasNoMeaningfulContent, textIsWhitespace)
 import Data.Text (Text)
 import Data.Text qualified as T
 import GHC.Generics (Generic)
-import GHC.TypeLits (KnownNat, Nat, natVal, type (<=))
+import GHC.TypeLits (ErrorMessage (..), KnownNat, Nat, TypeError, natVal, type (<=))
 import Language.Haskell.TH.Quote
 import Language.Haskell.TH.Syntax (Lift (..), TyLit (..), Type (..))
 import Test.QuickCheck
@@ -73,6 +73,15 @@ instance (KnownNat n, 1 <= n) => Arbitrary (NonEmptyText n) where
       -- Mostly alphanumeric characters, all human readable
       str <- replicateM size $ elements ['0' .. 'z']
       pure $ T.pack str
+
+instance
+  TypeError
+        ( 'Text "An instance of 'Semigroup (NonEmptyText n)' would violate the "
+    ':<>: 'Text "length guarantees."
+    ':$$: 'Text "Please use '(<>|)' or 'concatWithSpace' to combine the values."
+        )
+  => Semigroup (NonEmptyText n) where
+  (<>) = error "unreachable"
 
 mkNonEmptyText :: forall n. (KnownNat n, 1 <= n) => Text -> Maybe (NonEmptyText n)
 mkNonEmptyText t
