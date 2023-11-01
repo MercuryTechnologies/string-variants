@@ -66,4 +66,4 @@ type SymbolWithNoSpaceAround s = (SymbolNoLeadingSpace (UnconsSymbol s), SymbolN
 type family SymbolNoLongerThan (s :: Symbol) (n :: Nat) :: Constraint where
   SymbolNoLongerThan s n = If (SymbolLength 0 (UnconsSymbol s) <=? n)
     (() :: Constraint)
-    (TypeError ('Text "Invalid NonEmptyText. Needs to be <= " ':<>: 'ShowType n ':<>: 'Text " characters. Has " ':<>: 'ShowType (SymbolLength 0 (UnconsSymbol s)) ':<>: 'Text " characters."))
+    (TypeError ('Text "Invalid NonEmptyText. Needs to be <= " ' :<>: 'ShowType n ' :<>: 'Text " characters. Has " ' :<>: 'ShowType (SymbolLength 0 (UnconsSymbol s)) ' :<>: 'Text " characters."))

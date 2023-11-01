@@ -77,8 +77,8 @@ instance (KnownNat n, 1 <= n) => Arbitrary (NonEmptyText n) where
 instance
   TypeError
         ( 'Text "An instance of 'Semigroup (NonEmptyText n)' would violate the "
-    ':<>: 'Text "length guarantees."
-    ':$$: 'Text "Please use '(<>|)' or 'concatWithSpace' to combine the values."
+    ' :<>: 'Text "length guarantees."
+    ' :$$: 'Text "Please use '(<>|)' or 'concatWithSpace' to combine the values."
         )
   => Semigroup (NonEmptyText n) where
   (<>) = error "unreachable"
