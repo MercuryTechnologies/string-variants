@@ -1,5 +1,5 @@
 name: string-variants
-version: 0.3.0.0
+version: 0.3.0.1
 synopsis: Constrained text newtypes
 description: See README at <https://github.com/MercuryTechnologies/string-variants#readme>.
 category: Data
@@ -11,10 +11,10 @@ extra-source-files:
 
 license: MIT
 
-tested-with: GHC ==9.2.4 || ==9.4.2
+tested-with: GHC ==9.2.4 || ==9.4.2 || ==9.6.3
 # FIXME(jadel): maybe instances should be in a separate package but whatever
 dependencies:
-  - aeson >= 2.0.0.0
+  - aeson >= 2.2.0.0
   - base >= 4.16 && <5
   - bytestring
   - mono-traversable

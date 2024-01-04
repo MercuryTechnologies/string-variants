@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.3.0.1] - 2024-01-03
+
+- Add support for GHC 9.6
+
 ## [0.3.0.0] - 2023-10-24
 
 - Remove incorrect `Semigroup` instance for `NonEmptyText`

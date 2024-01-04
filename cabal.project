@@ -1,3 +1,15 @@
 -- HI! for pants reasons, if you add anything load bearing in here, you have to
 -- add it to raw-project in cabal.haskell-ci
+source-repository-package
+  type: git
+  location: https://github.com/nikita-volkov/refined
+  tag: 11296288b5e2f2b391ee721b50af3cfe7beaa790
+
+source-repository-package
+  type: git
+  location: https://github.com/TOTBWF/refinery
+  tag: e9dbb5fd990ff040c2496c7cf527c45550eb189b
+
 packages: .
+
+tests: True
