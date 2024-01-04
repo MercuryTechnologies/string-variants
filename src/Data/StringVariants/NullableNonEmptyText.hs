@@ -86,8 +86,10 @@ newtype NullableNonEmptyText n = NullableNonEmptyText (Maybe (NonEmptyText n))
 
 mkNullableNonEmptyText :: forall n. (KnownNat n, 1 <= n) => Text -> Maybe (NullableNonEmptyText n)
 mkNullableNonEmptyText t
-  | T.compareLength t (fromIntegral $ natVal (Proxy @n)) == GT = Nothing -- we can't store text that is too long
+  | T.compareLength stripped (fromIntegral $ natVal (Proxy @n)) == GT = Nothing -- we can't store text that is too long
   | otherwise = Just $ NullableNonEmptyText $ mkNonEmptyText t
+  where
+    stripped = T.filter (/= '\NUL') $ T.strip t
 
 nullNonEmptyText :: NullableNonEmptyText n
 nullNonEmptyText = NullableNonEmptyText Nothing

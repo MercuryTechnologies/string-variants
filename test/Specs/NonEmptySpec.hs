@@ -103,3 +103,13 @@ spec = describe "NonEmptyText variants" $ do
           usePositiveNat n (pure ()) $ \(_ :: proxy n) -> do
             let mtext = mkNonEmptyTextWithTruncate @n (T.pack $ replicate (n' + 1) 'x')
             (T.length . nonEmptyTextToText <$> mtext) === Just n'
+
+    describe "mkNullableNonEmptyText" $ do
+      it "should reject strings that are too big" $
+        mkNullableNonEmptyText @2 "hey" `shouldBe` Nothing
+      it "should accept empty strings" $
+        mkNullableNonEmptyText @2 "" `shouldBe` Just (NullableNonEmptyText Nothing)
+      it "should accept whitespace strings" $
+        mkNullableNonEmptyText @2 " " `shouldBe` Just (NullableNonEmptyText Nothing)
+      it "should strip whitespace" $
+        mkNullableNonEmptyText @2 " hi " `shouldBe` Just (NullableNonEmptyText $ Just $ unsafeMkNonEmptyText "hi")

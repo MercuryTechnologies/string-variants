@@ -39,7 +39,7 @@ spec = describe "FromJSON instances" $ do
   describe "NullableNonEmptyText" $ do
     it "rejects strings that are too long" $
       assertParseFailure $
-        object ["name" .= String "Daniel", "catchphrase" .= replicate 18 'a']
+        object ["name" .= String "Daniel", "catchphrase" .= replicate 16 'a']
     it "accepts missing properties" $
       object ["name" .= String "Daniel"]
         `shouldParseAs`
@@ -69,7 +69,7 @@ spec = describe "FromJSON instances" $ do
     shouldParseAs val person =
       decode (encode val) `shouldBe` Just person
 
-data Person = Person {name :: NonEmptyText 6, catchphrase :: NullableNonEmptyText 17}
+data Person = Person {name :: NonEmptyText 6, catchphrase :: NullableNonEmptyText 15}
   deriving stock (Eq, Generic, Show)
   deriving anyclass (FromJSON, ToJSON)
 #else
