@@ -52,7 +52,7 @@ import Prelude
 --
 --   @'NullableNonEmptyText' n@ is used in API types to represent optional text fields when you do not want an empty string to fail to parse.
 --   Like 'NonEmptyText', the payload 'Text' is guaranteed to be non-empty, within the character limit, and stripped of whitespace.
---   Unlike 'NonEmptyText', it will successfully parse empty strings as 'Nothing'.
+--   Unlike 'NonEmptyText', it will successfully parse empty strings as 'nullNonEmptyText'.
 --
 --   Since Aeson version 2.2, fields of this type maybe be missing, @null@, or empty without failing to parse.
 --   Avoid using @Maybe (NullableNonEmptyText n)@ in API types, since it creates unnecessary edge cases that complicate the code.
