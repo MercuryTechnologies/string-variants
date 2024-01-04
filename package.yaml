@@ -14,7 +14,7 @@ license: MIT
 tested-with: ==9.4.8 || ==9.6.3
 # FIXME(jadel): maybe instances should be in a separate package but whatever
 dependencies:
-  - aeson >= 2.2.0.0
+  - aeson >= 2.0.0.0
   - base >= 4.16 && <5
   - bytestring
   - mono-traversable
