@@ -2,19 +2,19 @@
 
 module Specs.JsonEncodingSpec (spec) where
 
-import Prelude
-import Test.Hspec
-
-#if MIN_VERSION_aeson(2,2,0)
 import Data.Aeson
 import Data.StringVariants.NonEmptyText
 import Data.StringVariants.NonEmptyText.Internal
 import Data.StringVariants.NullableNonEmptyText
 import GHC.Generics
-#endif
+import Prelude
+import Test.Hspec
+
+data Person = Person {name :: NonEmptyText 6, catchphrase :: NullableNonEmptyText 15}
+  deriving stock (Eq, Generic, Show)
+  deriving anyclass (FromJSON, ToJSON)
 
 spec :: Spec
-#if MIN_VERSION_aeson(2,2,0)
 spec = describe "FromJSON instances" $ do
   describe "NonEmptyText" $ do
     it "rejects strings that are too long" $
@@ -40,6 +40,7 @@ spec = describe "FromJSON instances" $ do
     it "rejects strings that are too long" $
       assertParseFailure $
         object ["name" .= String "Daniel", "catchphrase" .= replicate 16 'a']
+#if MIN_VERSION_aeson(2,2,0)
     it "accepts missing properties" $
       object ["name" .= String "Daniel"]
         `shouldParseAs`
@@ -48,6 +49,7 @@ spec = describe "FromJSON instances" $ do
       object ["name" .= String "Daniel", "catchphrase" .= Null]
         `shouldParseAs`
           Person (NonEmptyText "Daniel") (NullableNonEmptyText Nothing)
+#endif
     it "accepts empty strings" $
       object ["name" .= String "Daniel", "catchphrase" .= String ""]
         `shouldParseAs`
@@ -68,10 +70,3 @@ spec = describe "FromJSON instances" $ do
     shouldParseAs :: HasCallStack => Value -> Person -> IO ()
     shouldParseAs val person =
       decode (encode val) `shouldBe` Just person
-
-data Person = Person {name :: NonEmptyText 6, catchphrase :: NullableNonEmptyText 15}
-  deriving stock (Eq, Generic, Show)
-  deriving anyclass (FromJSON, ToJSON)
-#else
-spec = pure ()
-#endif

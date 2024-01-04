@@ -144,14 +144,12 @@ jobs:
           rm -f cabal.project cabal.project.local
           touch cabal.project
           touch cabal.project.local
-
           echo "packages: ${PKGDIR_string_variants}" >> cabal.project
           echo "package string-variants" >> cabal.project
           echo "  ghc-options: -Werror=missing-methods" >> cabal.project
           echo "tests: True" >> cabal.project
           echo "allow-newer:" >> cabal.project
           echo "  refined:aeson" >> cabal.project
-
           $HCPKG list --simple-output --names-only | perl -ne 'for (split /\s+/) { print "constraints: $_ installed\n" unless /^(string-variants)$/; }' >> cabal.project.local
           cat cabal.project
           cat cabal.project.local
