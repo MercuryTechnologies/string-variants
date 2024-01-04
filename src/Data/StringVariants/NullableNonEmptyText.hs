@@ -60,7 +60,7 @@ import Prelude
 --   __NB:__ When using a version of Aeson prior to 2.2, you /must/ use @Maybe (NullableNonEmptyText n)@ if you want to allow missing or null fields to parse.
 --
 --   @
---   data Person = Person 
+--   data Person = Person
 --     { name :: 'NonEmptyText' 50
 --     , catchphrase :: 'NullableNonEmptyText' 500
 --     }
@@ -75,10 +75,8 @@ import Prelude
 --
 --   These two JSON objects parses as @Person "Daniel" (mkNullableNonEmptyText "Yabba-Dabba Do!")@
 --
---   @@@
---   {"name": "Daniel", catchphrase: "Yabba-Dabba Do!"}
---   {"name": "Daniel", catchphrase: "    Yabba-Dabba Do!   "}
---   @@@
+--   > {"name": "Daniel", catchphrase: "Yabba-Dabba Do!"}
+--   > {"name": "Daniel", catchphrase: "    Yabba-Dabba Do!   "}
 --
 --   Use 'nullableNonEmptyTextToMaybeNonEmptyText' to extract @Maybe (NonEmptyText n)@ from @NullableNonEmptyText n@.
 newtype NullableNonEmptyText n = NullableNonEmptyText (Maybe (NonEmptyText n))
