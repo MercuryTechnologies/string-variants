@@ -1,11 +1,11 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.35.2.
+-- This file has been generated from package.yaml by hpack version 0.36.0.
 --
 -- see: https://github.com/sol/hpack
 
 name:           string-variants
-version:        0.3.0.0
+version:        0.3.0.1
 synopsis:       Constrained text newtypes
 description:    See README at <https://github.com/MercuryTechnologies/string-variants#readme>.
 category:       Data
@@ -16,7 +16,7 @@ license:        MIT
 license-file:   LICENSE
 build-type:     Simple
 tested-with:
-    GHC ==9.2.4 || ==9.4.2
+    GHC ==9.2.8 || ==9.4.8 || ==9.6.3
 extra-source-files:
     CHANGELOG.md
 
@@ -81,7 +81,6 @@ library
     , bytestring
     , mono-traversable
     , refined
-    , refinery
     , string-conversions
     , template-haskell
     , text
@@ -92,6 +91,7 @@ test-suite test
   main-is: Main.hs
   other-modules:
       Spec
+      Specs.JsonEncodingSpec
       Specs.NonEmptySpec
       Specs.TextManipulationSpec
       Paths_string_variants
@@ -138,19 +138,11 @@ test-suite test
       hspec-discover:hspec-discover
   build-depends:
       HUnit
-    , QuickCheck
     , aeson >=2.0.0.0
     , base >=4.16 && <5
-    , bytestring
     , hedgehog
     , hspec
-    , hspec-core
-    , hspec-expectations
     , hspec-hedgehog
-    , mono-traversable
-    , refined
-    , refinery
-    , string-conversions
     , string-variants
     , template-haskell
     , text

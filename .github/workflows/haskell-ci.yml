@@ -19,7 +19,7 @@ on:
 jobs:
   linux:
     name: Haskell-CI - Linux - ${{ matrix.compiler }}
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     timeout-minutes:
       60
     container:
@@ -28,14 +28,19 @@ jobs:
     strategy:
       matrix:
         include:
-          - compiler: ghc-9.4.2
+          - compiler: ghc-9.2.8
             compilerKind: ghc
-            compilerVersion: 9.4.2
+            compilerVersion: 9.2.8
             setup-method: ghcup
             allow-failure: false
-          - compiler: ghc-9.2.4
+          - compiler: ghc-9.4.8
             compilerKind: ghc
-            compilerVersion: 9.2.4
+            compilerVersion: 9.4.8
+            setup-method: ghcup
+            allow-failure: false
+          - compiler: ghc-9.6.3
+            compilerKind: ghc
+            compilerVersion: 9.6.3
             setup-method: ghcup
             allow-failure: false
       fail-fast: false
@@ -146,13 +151,10 @@ jobs:
           touch cabal.project.local
           echo "packages: ${PKGDIR_string_variants}" >> cabal.project
           echo "package string-variants" >> cabal.project
-          echo "    ghc-options: -Werror=missing-methods" >> cabal.project
-          cat >> cabal.project <<EOF
-          source-repository-package
-            type:     git
-            location: https://github.com/nikita-volkov/refined
-            tag:      eced2bb0991bde971646e4b3d291870d0aab83a3
-          EOF
+          echo "  ghc-options: -Werror=missing-methods" >> cabal.project
+          echo "tests: True" >> cabal.project
+          echo "allow-newer:" >> cabal.project
+          echo "  refined:aeson" >> cabal.project
           $HCPKG list --simple-output --names-only | perl -ne 'for (split /\s+/) { print "constraints: $_ installed\n" unless /^(string-variants)$/; }' >> cabal.project.local
           cat cabal.project
           cat cabal.project.local

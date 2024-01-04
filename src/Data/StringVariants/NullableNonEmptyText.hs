@@ -50,24 +50,45 @@ import Prelude
 
 -- | Newtype wrapper around Maybe NonEmptyText that converts empty string to 'Nothing'.
 --
---   This is aimed primarily at JSON parsing: make it possible to parse empty
---   string and turn it into @Nothing@, in order to convert everything into
---   @Maybe NonEmptyText@ at the edge of the system.
+--   @'NullableNonEmptyText' n@ is used in API types to represent optional text fields when you do not want an empty string to fail to parse.
+--   Like 'NonEmptyText', the payload 'Text' is guaranteed to be non-empty, within the character limit, and stripped of whitespace.
+--   Unlike 'NonEmptyText', it will successfully parse empty strings as 'nullNonEmptyText'.
 --
---   While using this for JSON parsing, use @Maybe NullableNonEmptyText@. Aeson
---   special-cases @Maybe@ to allow nulls, so @Maybe@ catches the nulls and
---   @NullableNonEmptyText@ catches the empty strings.
+--   Since Aeson version 2.2, fields of this type maybe be missing, @null@, or empty without failing to parse.
+--   Avoid using @Maybe (NullableNonEmptyText n)@ in API types, since it creates unnecessary edge cases that complicate the code.
 --
---   To extract @Maybe NonEmptyText@ values from @Maybe NullableNonEmptyText@,
---   use 'nullableNonEmptyTextToMaybeNonEmptyText'.
+--   __NB:__ When using a version of Aeson prior to 2.2, you /must/ use @Maybe (NullableNonEmptyText n)@ if you want to allow missing or null fields to parse.
+--
+--   @
+--   data Person = Person
+--     { name :: 'NonEmptyText' 50
+--     , catchphrase :: 'NullableNonEmptyText' 500
+--     }
+--   @
+--
+--   With this type definition, these four JSON objects below are valid and parse as @Person "Daniel" nullNonEmptyText@.
+--
+--   > {"name": "Daniel"}
+--   > {"name": "Daniel", catchphrase: null}
+--   > {"name": "Daniel", catchphrase: ""}
+--   > {"name": "Daniel", catchphrase: " "}
+--
+--   These two JSON objects parses as @Person "Daniel" (mkNullableNonEmptyText "Yabba-Dabba Do!")@
+--
+--   > {"name": "Daniel", catchphrase: "Yabba-Dabba Do!"}
+--   > {"name": "Daniel", catchphrase: "    Yabba-Dabba Do!   "}
+--
+--   Use 'nullableNonEmptyTextToMaybeNonEmptyText' to extract @Maybe (NonEmptyText n)@ from @NullableNonEmptyText n@.
 newtype NullableNonEmptyText n = NullableNonEmptyText (Maybe (NonEmptyText n))
   deriving stock (Generic, Show, Read, Lift)
   deriving newtype (Eq)
 
 mkNullableNonEmptyText :: forall n. (KnownNat n, 1 <= n) => Text -> Maybe (NullableNonEmptyText n)
 mkNullableNonEmptyText t
-  | T.compareLength t (fromIntegral $ natVal (Proxy @n)) == GT = Nothing -- we can't store text that is too long
+  | T.compareLength stripped (fromIntegral $ natVal (Proxy @n)) == GT = Nothing -- we can't store text that is too long
   | otherwise = Just $ NullableNonEmptyText $ mkNonEmptyText t
+  where
+    stripped = T.filter (/= '\NUL') $ T.strip t
 
 nullNonEmptyText :: NullableNonEmptyText n
 nullNonEmptyText = NullableNonEmptyText Nothing

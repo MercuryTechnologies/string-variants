@@ -1,3 +1,8 @@
 -- HI! for pants reasons, if you add anything load bearing in here, you have to
--- add it to raw-project in cabal.haskell-ci
+-- add it to `generate cabal.project` in `.github/workflows/haskell-ci.yml`
 packages: .
+
+tests: True
+
+allow-newer:
+  refined:aeson
