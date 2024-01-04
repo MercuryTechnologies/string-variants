@@ -146,7 +146,7 @@ jobs:
           touch cabal.project.local
           echo "packages: ${PKGDIR_string_variants}" >> cabal.project
           echo "package string-variants" >> cabal.project
-          echo "    ghc-options: -Werror=missing-methods" >> cabal.project
+          echo "  ghc-options: -Werror=missing-methods" >> cabal.project
           echo "source-repository-package" >> cabal.project
           echo "  type: git" >> cabal.project
           echo "  location: https://github.com/nikita-volkov/refined" >> cabal.project
