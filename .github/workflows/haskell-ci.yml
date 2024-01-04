@@ -144,18 +144,13 @@ jobs:
           rm -f cabal.project cabal.project.local
           touch cabal.project
           touch cabal.project.local
+
           echo "packages: ${PKGDIR_string_variants}" >> cabal.project
           echo "package string-variants" >> cabal.project
           echo "  ghc-options: -Werror=missing-methods" >> cabal.project
-          echo "source-repository-package" >> cabal.project
-          echo "  type: git" >> cabal.project
-          echo "  location: https://github.com/nikita-volkov/refined" >> cabal.project
-          echo "  tag: 11296288b5e2f2b391ee721b50af3cfe7beaa790" >> cabal.project
-          echo "source-repository-package" >> cabal.project
-          echo "  type: git" >> cabal.project
-          echo "  location: https://github.com/TOTBWF/refinery" >> cabal.project
-          echo "  tag: e9dbb5fd990ff040c2496c7cf527c45550eb189b" >> cabal.project
           echo "tests: True" >> cabal.project
+          echo "allow-newer:" >> cabal.project
+          echo "  refined:aeson" >> cabal.project
 
           $HCPKG list --simple-output --names-only | perl -ne 'for (split /\s+/) { print "constraints: $_ installed\n" unless /^(string-variants)$/; }' >> cabal.project.local
           cat cabal.project
