@@ -3,6 +3,8 @@
 ## [0.3.0.1] - 2024-01-03
 
 - Add support for GHC 9.6
+- Fix bug in `mkNullableNonEmptyText` that incorrectly counted leading and trailing whitespace against the character limit.
+- Improve documentation for `NullableNonEmptyText`
 
 ## [0.3.0.0] - 2023-10-24
 
