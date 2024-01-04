@@ -11,6 +11,6 @@ raw-project
     location: https://github.com/TOTBWF/refinery
     tag: e9dbb5fd990ff040c2496c7cf527c45550eb189b
 
-  packages: ./string-variants.cabal
+  packages: .
 
   tests: True
