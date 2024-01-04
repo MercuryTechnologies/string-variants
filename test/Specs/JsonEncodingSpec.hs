@@ -11,9 +11,6 @@ import Data.StringVariants.NonEmptyText
 import Data.StringVariants.NonEmptyText.Internal
 import Data.StringVariants.NullableNonEmptyText
 import GHC.Generics
-import GHC.Stack
-import Prelude
-import Test.Hspec
 #endif
 
 spec :: Spec
