@@ -68,12 +68,10 @@ import Prelude
 --
 --   With this type definition, these four JSON objects below are valid and parse as @Person "Daniel" nullNonEmptyText@.
 --
---   @@@
---   {"name": "Daniel"}
---   {"name": "Daniel", catchphrase: null}
---   {"name": "Daniel", catchphrase: ""}
---   {"name": "Daniel", catchphrase: " "}
---   @@@
+--   > {"name": "Daniel"}
+--   > {"name": "Daniel", catchphrase: null}
+--   > {"name": "Daniel", catchphrase: ""}
+--   > {"name": "Daniel", catchphrase: " "}
 --
 --   These two JSON objects parses as @Person "Daniel" (mkNullableNonEmptyText "Yabba-Dabba Do!")@
 --
