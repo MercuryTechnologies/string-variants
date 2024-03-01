@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE UndecidableInstances #-}
@@ -14,6 +15,7 @@ import Control.Monad (when)
 import Data.Aeson (FromJSON (..), ToJSON, withText)
 import Data.ByteString
 import Data.Coerce
+import Data.Data (Data)
 import Data.MonoTraversable
 import Data.Proxy
 import Data.Sequences
@@ -30,7 +32,7 @@ import Prelude
 
 -- | Non Empty Text, requires the input is between 1 and @n@ chars and not just whitespace.
 newtype NonEmptyText (n :: Nat) = NonEmptyText Text
-  deriving stock (Generic, Show, Read, Lift)
+  deriving stock (Data, Generic, Show, Read, Lift)
   deriving newtype (Eq, Ord, ToJSON, MonoFoldable)
 
 type instance Element (NonEmptyText _n) = Char
