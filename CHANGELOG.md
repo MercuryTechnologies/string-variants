@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.3.1.0] - 2024-02-29
+
+- Add `Data` instance to `NonEmptyText`.
+
 ## [0.3.0.1] - 2024-01-03
 
 - Add support for GHC 9.6
