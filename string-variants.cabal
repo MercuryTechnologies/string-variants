@@ -5,7 +5,7 @@ cabal-version: 1.12
 -- see: https://github.com/sol/hpack
 
 name:           string-variants
-version:        0.3.1.0
+version:        0.3.0.1
 synopsis:       Constrained text newtypes
 description:    See README at <https://github.com/MercuryTechnologies/string-variants#readme>.
 category:       Data
@@ -79,6 +79,8 @@ library
     , aeson >=2.0.0.0
     , base >=4.16 && <5
     , bytestring
+    , deepseq
+    , hashable
     , mono-traversable
     , refined
     , string-conversions

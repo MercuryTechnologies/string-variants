@@ -24,6 +24,7 @@ library:
   dependencies:
     - QuickCheck
     - bytestring
+    - deepseq
     - hashable
     - mono-traversable
     - refined
