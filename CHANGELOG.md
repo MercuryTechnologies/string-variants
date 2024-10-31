@@ -4,7 +4,7 @@
 
 - Add `Hashable` and `NFData` instances to `NonEmptyText`.
 - Add `Data`, `Ord`, `Hashable` and `NFData` instances to `NullableNonEmptyText`.
-- Add dependences on `deepseq` and `hashable`.
+- Add dependencies on `deepseq` and `hashable`.
 
 ## [0.3.1.0] - 2024-02-29
 
