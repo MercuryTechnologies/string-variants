@@ -11,11 +11,13 @@
 
 module Data.StringVariants.NonEmptyText.Internal where
 
+import Control.DeepSeq (NFData)
 import Control.Monad (when)
 import Data.Aeson (FromJSON (..), ToJSON, withText)
 import Data.ByteString
 import Data.Coerce
 import Data.Data (Data)
+import Data.Hashable (Hashable)
 import Data.MonoTraversable
 import Data.Proxy
 import Data.Sequences
@@ -33,7 +35,7 @@ import Prelude
 -- | Non Empty Text, requires the input is between 1 and @n@ chars and not just whitespace.
 newtype NonEmptyText (n :: Nat) = NonEmptyText Text
   deriving stock (Data, Generic, Show, Read, Lift)
-  deriving newtype (Eq, Ord, ToJSON, MonoFoldable)
+  deriving newtype (Eq, Ord, ToJSON, MonoFoldable, Hashable, NFData)
 
 type instance Element (NonEmptyText _n) = Char
 

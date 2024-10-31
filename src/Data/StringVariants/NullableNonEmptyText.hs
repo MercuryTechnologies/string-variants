@@ -1,5 +1,6 @@
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE ConstraintKinds #-}
+{-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE UndecidableInstances #-}
@@ -30,14 +31,18 @@ module Data.StringVariants.NullableNonEmptyText
   )
 where
 
+import Control.DeepSeq (NFData)
 import Control.Monad
 import Data.Aeson
 import Data.Aeson qualified as J
 import Data.Aeson.Key qualified as J
 import Data.Aeson.Types qualified as J
-import Data.Data (Proxy (..))
+import Data.Data (Data, Proxy (..))
+import Data.Hashable (Hashable)
 import Data.Maybe (fromMaybe)
+import Data.MonoTraversable (MonoFoldable)
 import Data.StringVariants.NonEmptyText
+import Data.StringVariants.NonEmptyText.Internal (NonEmptyText (..))
 import Data.StringVariants.Util
 import Data.Text (Text)
 import Data.Text qualified as T
@@ -80,8 +85,8 @@ import Prelude
 --
 --   Use 'nullableNonEmptyTextToMaybeNonEmptyText' to extract @Maybe (NonEmptyText n)@ from @NullableNonEmptyText n@.
 newtype NullableNonEmptyText n = NullableNonEmptyText (Maybe (NonEmptyText n))
-  deriving stock (Generic, Show, Read, Lift)
-  deriving newtype (Eq)
+  deriving stock (Data, Generic, Show, Read, Lift)
+  deriving newtype (Eq, Ord, Hashable, NFData)
 
 mkNullableNonEmptyText :: forall n. (KnownNat n, 1 <= n) => Text -> Maybe (NullableNonEmptyText n)
 mkNullableNonEmptyText t

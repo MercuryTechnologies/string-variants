@@ -1,5 +1,5 @@
 name: string-variants
-version: 0.3.0.1
+version: 0.3.1.1
 synopsis: Constrained text newtypes
 description: See README at <https://github.com/MercuryTechnologies/string-variants#readme>.
 category: Data
@@ -24,6 +24,8 @@ library:
   dependencies:
     - QuickCheck
     - bytestring
+    - deepseq
+    - hashable
     - mono-traversable
     - refined
     - string-conversions
