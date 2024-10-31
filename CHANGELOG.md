@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.3.1.1] - 2024-10-31
+
+- Add `Hashable` and `NFData` instances to `NonEmptyText`.
+- Add `Data`, `Ord`, `Hashable` and `NFData` instances to `NullableNonEmptyText`.
+- Add dependences on `deepseq` and `hashable`.
+
 ## [0.3.1.0] - 2024-02-29
 
 - Add `Data` instance to `NonEmptyText`.
