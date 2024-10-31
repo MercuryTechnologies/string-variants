@@ -80,8 +80,8 @@ import Prelude
 --
 --   Use 'nullableNonEmptyTextToMaybeNonEmptyText' to extract @Maybe (NonEmptyText n)@ from @NullableNonEmptyText n@.
 newtype NullableNonEmptyText n = NullableNonEmptyText (Maybe (NonEmptyText n))
-  deriving stock (Generic, Show, Read, Lift)
-  deriving newtype (Eq)
+  deriving stock (Data, Generic, Show, Read, Lift)
+  deriving newtype (Eq, Ord, MonoFoldable, Hashable)
 
 mkNullableNonEmptyText :: forall n. (KnownNat n, 1 <= n) => Text -> Maybe (NullableNonEmptyText n)
 mkNullableNonEmptyText t
