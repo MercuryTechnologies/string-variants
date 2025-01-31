@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.3.1.2] - 2025-01-30
+
+- Add the limit number to the decode error string for `NonEmptyText`.
+
 ## [0.3.1.1] - 2024-10-31
 
 - Add `Hashable` and `NFData` instances to `NonEmptyText`.

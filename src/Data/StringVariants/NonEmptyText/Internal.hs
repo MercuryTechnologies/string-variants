@@ -43,7 +43,7 @@ instance (KnownNat n, 1 <= n) => FromJSON (NonEmptyText n) where
   parseJSON = withText "NonEmptyText" $ \t -> do
     performInboundValidations t
     case mkNonEmptyText t of
-      Nothing -> fail $ "Data/StringVariants/NonEmptyText.hs: invalid NonEmptyText: " ++ T.unpack t
+      Nothing -> fail $ "Data/StringVariants/NonEmptyText.hs: invalid NonEmptyText " ++ show (natVal (Proxy @n))  ++ ": " ++ T.unpack t
       Just nonEmptyText -> pure nonEmptyText
     where
       -- These validations are performed at the edge of the system rather than in
