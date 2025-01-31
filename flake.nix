@@ -56,7 +56,6 @@
                 fourmolu
                 # ghcid
                 cabal-install
-                haskell-ci
                 # fast-tags
               ] ++ (with pkgs; [
                 sqlite

@@ -1,5 +1,0 @@
--- As of this writing on 2025-01-31, haskell-ci was generating a buildpack-deps defaulting to Bionic (18.04)
--- Also, there's not been a release since May 2024 so we cannot just ask for Ubuntu 24.04, so we will settle for 20.04.
--- i.e. this is not in a release https://github.com/haskell-CI/haskell-ci/commit/a36d6fa232c8edd5e27833573c6345a08cb484de
--- https://github.com/haskell-CI/haskell-ci/issues/738
-distribution: jammy
