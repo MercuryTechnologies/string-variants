@@ -54,6 +54,7 @@
               nativeBuildInputs = with haskellPackages; [
                 haskell-language-server
                 fourmolu
+                hpack
                 # ghcid
                 cabal-install
                 # fast-tags
