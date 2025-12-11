@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.3.1.3] - 2025-12-11
+
+- Fix the comparator displayed in the error message for too-long `NullableNonEmptyText`.
+
 ## [0.3.1.2] - 2025-01-30
 
 - Add the limit number to the decode error string for `NonEmptyText`.
