@@ -115,7 +115,7 @@ instance (KnownNat n, 1 <= n) => FromJSON (NullableNonEmptyText n) where
   parseJSON = \case
     J.String t -> case mkNullableNonEmptyText t of
       Just txt -> pure txt
-      Nothing -> fail $ "Data/StringVariants/NullableNonEmptyText.hs: When trying to parse a NullableNonEmptyText, expected a String of length < " ++ show (natVal (Proxy @n)) ++ ", but received: " ++ T.unpack t
+      Nothing -> fail $ "Data/StringVariants/NullableNonEmptyText.hs: When trying to parse a NullableNonEmptyText, expected a String of length <= " ++ show (natVal (Proxy @n)) ++ ", but received: " ++ T.unpack t
     J.Null -> pure $ NullableNonEmptyText Nothing
     x -> fail $ "Data/StringVariants/NullableNonEmptyText.hs: When trying to parse a NullableNonEmptyText, expected a String or Null, but received: " ++ show x
 
