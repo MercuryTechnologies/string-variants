@@ -13,7 +13,7 @@ if [[ -e package.yaml ]]; then
     hpack --force
 fi
 
-version=$(perl -ne '/^version: (.+)$/ && print "$1\n"' "${cabal_file}")
+version=$(perl -ne '/^version: (.+)$/ && print "$1\n"' "${cabal_file}" | tr -d ' ')
 git fetch origin
 
 # Ensure we are on origin/main
